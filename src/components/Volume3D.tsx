@@ -57,7 +57,7 @@ const Volume3DComponent = ({ config }: Volume3DProps) => {
       {gridPositions.map(({ x, y, z, index }) => (
           <MinesweeperUnit2D 
             key={index}
-            variant="number" 
+            variant="bomb" 
             config={config}
             active={true}
             size={cardSize}
