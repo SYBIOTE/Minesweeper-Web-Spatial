@@ -17,9 +17,9 @@ export interface GameConfig {
   difficulty: {
     level: 'beginner' | 'intermediate' | 'expert' | 'custom'
     preset: {
-      beginner: { width: 9, height: 9, depth: 1, mines: 10 }
-      intermediate: { width: 16, height: 16, depth: 2, mines: 40 }
-      expert: { width: 30, height: 16, depth: 3, mines: 99 }
+      beginner: { width: number, height: number, depth: number, mines: number }
+      intermediate: { width: number, height: number, depth: number, mines: number }
+      expert: { width: number, height: number, depth: number, mines: number }
     }
   }
   
@@ -104,9 +104,9 @@ export const defaultConfig: GameConfig = {
   difficulty: {
     level: 'intermediate',
     preset: {
-      beginner: { width: 9, height: 9, depth: 1, mines: 10 },
-      intermediate: { width: 16, height: 16, depth: 2, mines: 40 },
-      expert: { width: 30, height: 16, depth: 3, mines: 99 }
+      beginner: { width: 5, height: 5, depth: 5, mines: 10 },
+      intermediate: { width: 7, height: 7, depth: 7, mines: 15 },
+      expert: { width: 11, height: 11, depth: 11, mines: 20 }
     }
   },
   
