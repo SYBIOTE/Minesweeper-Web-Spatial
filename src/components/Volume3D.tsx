@@ -60,8 +60,6 @@ const Volume3DComponent = ({ config }: Volume3DProps) => {
     }
     return positions
   }, [gridWidth, gridHeight, gridDepth, cardSize, cardSpacing])
-
-  console.log("DEBUG",gridPositions)
   // For 2D units, we don't need to limit active instances since they're lightweight
   // All cards are active by default (no performance concerns with CSS/SVG)
   
