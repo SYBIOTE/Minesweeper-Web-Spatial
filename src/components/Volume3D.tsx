@@ -35,9 +35,9 @@ const Volume3DComponent = ({ config }: Volume3DProps) => {
       for (let y = 0; y < gridHeight; y++) {
         for (let z = 0; z < gridDepth; z++) {
           // Center the grid at origin (0,0,0)
-          const posX = (x * (cardSize + cardSpacing)) - totalWidth / 2 + (cardSize + cardSpacing) / 2
-          const posY = (y * (cardSize + cardSpacing)) - totalHeight / 2 + (cardSize + cardSpacing) / 2
-          const posZ = (z * (cardSize + cardSpacing)) - totalDepth / 2 + (cardSize + cardSpacing) / 2
+          const posX = (x * (cardSize + cardSpacing)) - totalWidth / 2
+          const posY = (y * (cardSize + cardSpacing)) - totalHeight / 2
+          const posZ = (z * (cardSize + cardSpacing)) - totalDepth / 2
 
           positions.push({ 
             x: posX, 
@@ -65,8 +65,8 @@ const Volume3DComponent = ({ config }: Volume3DProps) => {
             active={true}
             size={cardSize}
             position={{ 
-              x: x + (gridWidth * (cardSize + cardSpacing) - cardSpacing) / 2,
-              y: y + (gridHeight * (cardSize + cardSpacing) - cardSpacing) / 2,
+              x: x,
+              y: y,
               z: z
             }}
             index={index}
