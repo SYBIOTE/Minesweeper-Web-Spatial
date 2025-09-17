@@ -245,7 +245,7 @@ const MinesweeperUnit2DComponent = ({ variant = 'empty', number, config = defaul
   }
 
   return (
-    <div style={getCardStyle()}>
+    <div enable-xr style={getCardStyle()}>
       {renderContent()}
     </div>
   )
