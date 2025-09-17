@@ -45,13 +45,14 @@ export class MinesweeperGame {
   private initializeGame(): GameState {
     const { width, height, depth, mineCount } = this.config
 
-    // Initialize empty cells
-    const cells: Cell[] = []
+    // Initialize empty cells at their linear index so lookups by index work
+    const total = width * height * depth
+    const cells: Cell[] = new Array(total) as Cell[]
     for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
         for (let z = 0; z < depth; z++) {
           const index = x + y * width + z * width * height
-          cells.push({
+          cells[index] = {
             x,
             y,
             z,
@@ -60,7 +61,7 @@ export class MinesweeperGame {
             isFlagged: false,
             neighborMineCount: 0,
             index
-          })
+          }
         }
       }
     }
@@ -213,14 +214,15 @@ export class MinesweeperGame {
 
     while (queue.length > 0) {
       const currentCell = queue.shift()!
-      
-      if (visited.has(currentCell.index) || currentCell.isRevealed || currentCell.isFlagged) {
+      if (visited.has(currentCell.index) || currentCell.isFlagged) {
         continue
       }
 
       visited.add(currentCell.index)
-      currentCell.isRevealed = true
-      this.state.revealedCount++
+      if (!currentCell.isRevealed) {
+        currentCell.isRevealed = true
+        this.state.revealedCount++
+      }
 
       // If this cell is also empty, add its neighbors to the queue
       if (currentCell.neighborMineCount === 0) {
@@ -342,7 +344,7 @@ export class MinesweeperGame {
   }
 
   // Get cell variant for rendering
-  public getCellVariant(index: number): 'empty' | 'bomb' | 'flag' | 'number' {
+  public getCellVariant(index: number): 'empty' | 'revealed' | 'bomb' | 'flag' | 'number' {
     const cell = this.getCell(index)
     if (!cell) return 'empty'
 
@@ -350,7 +352,7 @@ export class MinesweeperGame {
     if (!cell.isRevealed) return 'empty'
     if (cell.isMine) return 'bomb'
     if (cell.neighborMineCount > 0) return 'number'
-    return 'empty'
+    return 'revealed' // Revealed empty cell
   }
 
   // Get cell number for rendering

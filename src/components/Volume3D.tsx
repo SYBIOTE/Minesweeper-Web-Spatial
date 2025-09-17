@@ -8,7 +8,7 @@ interface Volume3DProps {
     handleCellClick: (index: number, event?: React.MouseEvent) => void
     handleCellRightClick: (index: number, event: React.MouseEvent) => void
     getCellData: (index: number) => {
-      variant: 'empty' | 'bomb' | 'flag' | 'number'
+      variant: 'empty' | 'revealed' | 'bomb' | 'flag' | 'number'
       number?: number
       isRevealed: boolean
       isFlagged: boolean

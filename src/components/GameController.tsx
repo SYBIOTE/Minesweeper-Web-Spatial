@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { MinesweeperGame, type GameConfig as GameConfigType, type GameState } from '../game/MinesweeperGame'
 import type { GameConfig } from '../AppConfig'
 
@@ -29,13 +29,23 @@ export const GameController = ({ config, onGameStateChange, onGameEnd }: GameCon
     }
   }, [config])
 
-  // Initialize game instance
-  const [game] = useState(() => new MinesweeperGame(gameConfig))
+  // Initialize game instance - recreate when config changes
+  const [game, setGame] = useState(() => new MinesweeperGame(gameConfig))
   
   // Game state
   const [gameState, setGameState] = useState(game.getGameState())
   const [stats, setStats] = useState(game.getStats())
   const [flagMode, setFlagMode] = useState(config.mechanics.flagMode)
+  
+  // Use refs to avoid dependency issues
+  const gameStateRef = useRef(gameState)
+  gameStateRef.current = gameState
+  
+  const onGameStateChangeRef = useRef(onGameStateChange)
+  onGameStateChangeRef.current = onGameStateChange
+  
+  const onGameEndRef = useRef(onGameEnd)
+  onGameEndRef.current = onGameEnd
 
   // Update game state and stats
   const updateGameState = useCallback(() => {
@@ -44,14 +54,14 @@ export const GameController = ({ config, onGameStateChange, onGameEnd }: GameCon
     setGameState(newGameState)
     setStats(newStats)
     
-    if (onGameStateChange) {
-      onGameStateChange(newGameState)
+    if (onGameStateChangeRef.current) {
+      onGameStateChangeRef.current(newGameState)
     }
-  }, [game, onGameStateChange])
+  }, [game])
 
   // Handle cell click
   const handleCellClick = useCallback((index: number, event?: React.MouseEvent) => {
-    if (gameState.gameStatus !== 'playing') return
+    if (gameStateRef.current.gameStatus !== 'playing') return
 
     const isRightClick = event?.button === 2 || event?.ctrlKey || event?.metaKey
     const isMiddleClick = event?.button === 1
@@ -68,8 +78,8 @@ export const GameController = ({ config, onGameStateChange, onGameEnd }: GameCon
       const result = game.chordClick(index)
       if (result.success) {
         updateGameState()
-        if (result.gameOver && onGameEnd) {
-          onGameEnd(result.won || false, game.getStats())
+        if (result.gameOver && onGameEndRef.current) {
+          onGameEndRef.current(result.won || false, game.getStats())
         }
       }
     } else {
@@ -77,12 +87,12 @@ export const GameController = ({ config, onGameStateChange, onGameEnd }: GameCon
       const result = game.revealCell(index)
       if (result.success) {
         updateGameState()
-        if (result.gameOver && onGameEnd) {
-          onGameEnd(result.won || false, game.getStats())
+        if (result.gameOver && onGameEndRef.current) {
+          onGameEndRef.current(result.won || false, game.getStats())
         }
       }
     }
-  }, [game, gameState.gameStatus, flagMode, config.mechanics.chordClick, updateGameState, onGameEnd])
+  }, [game, flagMode, config.mechanics.chordClick, updateGameState])
 
   // Handle cell right click
   const handleCellRightClick = useCallback((index: number, event: React.MouseEvent) => {
@@ -114,18 +124,32 @@ export const GameController = ({ config, onGameStateChange, onGameEnd }: GameCon
 
   // Update game when config changes
   useEffect(() => {
-    // Reset game with new config
-    game.reset()
-    updateGameState()
-  }, [gameConfig, game, updateGameState])
+    // Create new game instance with new config
+    const newGame = new MinesweeperGame(gameConfig)
+    setGame(newGame)
+    
+    const newGameState = newGame.getGameState()
+    const newStats = newGame.getStats()
+    setGameState(newGameState)
+    setStats(newStats)
+    
+    if (onGameStateChangeRef.current) {
+      onGameStateChangeRef.current(newGameState)
+    }
+  }, [gameConfig])
 
-  // Expose game controls and state
-  const gameControls = {
+  // Memoize the stable controls separately from the changing state
+  const stableControls = useMemo(() => ({
     handleCellClick,
     handleCellRightClick,
     toggleFlagMode,
     resetGame,
-    getCellData,
+    getCellData
+  }), [handleCellClick, handleCellRightClick, toggleFlagMode, resetGame, getCellData])
+
+  // Expose game controls and state
+  const gameControls = {
+    ...stableControls,
     gameState,
     stats,
     flagMode,

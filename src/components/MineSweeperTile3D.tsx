@@ -6,7 +6,7 @@ import type { GameConfig } from '../AppConfig'
 import defaultConfig from '../AppConfig'
 
 type MinesweeperTileProps = {
-  variant?: 'empty' | 'bomb' | 'flag' | 'number'
+  variant?: 'empty' | 'revealed' | 'bomb' | 'flag' | 'number'
   number?: number
   config?: GameConfig
   active?: boolean
@@ -71,6 +71,13 @@ const CardContent3D = ({ variant = 'empty', number, config }: { variant?: Minesw
         >
           {String(number)}
         </Text>
+      )}
+
+      {variant === 'revealed' && (
+        <mesh position={[0, 0, 0.2]}>
+          <sphereGeometry args={[0.05, 12, 12]} />
+          <meshStandardMaterial color="#ffffff" metalness={0.3} roughness={0.7} />
+        </mesh>
       )}
     </>
   )
