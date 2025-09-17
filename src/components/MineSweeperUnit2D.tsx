@@ -49,13 +49,12 @@ const MinesweeperUnit2DComponent = ({ position, index, variant = 'empty', number
       background: `linear-gradient(135deg, ${unrevealedColor}88, ${unrevealedColor}44)`,
       backdropFilter: 'blur(4px)',
       boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 8px rgba(0,0,0,0.3)',
-      position: 'relative',
+      position: 'absolute',
       overflow: 'hidden'
     }
 
     // Add position-specific styling if position is provided
     if (position) {
-      baseStyle.position = 'absolute'
       baseStyle.left = `${position.x}px`
       baseStyle.top = `${position.y}px`
       baseStyle.transform = `translateZ(${position.z}px)`
