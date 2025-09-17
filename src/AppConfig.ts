@@ -8,11 +8,12 @@ export interface GameConfig {
   
   // Difficulty presets
   difficulty: {
-    level: 'beginner' | 'intermediate' | 'expert' 
+    level: 'beginner' | 'intermediate' | 'expert' | 'flatscreen'
     preset: {
       beginner: { width: number, height: number, depth: number, mines: number }
       intermediate: { width: number, height: number, depth: number, mines: number }
       expert: { width: number, height: number, depth: number, mines: number }
+      flatscreen: { width: number, height: number, depth: number, mines: number }
     }
   }
   
@@ -90,11 +91,12 @@ export const defaultConfig: GameConfig = {
   },
   
   difficulty: {
-    level: 'beginner',
+    level: 'flatscreen',
     preset: {
       beginner: { width: 3, height: 3, depth: 3, mines: 5 },
       intermediate: { width: 7, height: 7, depth: 7, mines: 15 },
-      expert: { width: 11, height: 11, depth: 11, mines: 20 }
+      expert: { width: 11, height: 11, depth: 11, mines: 20 },
+      flatscreen: { width: 11, height: 11, depth: 1, mines: 20 }
     } 
   },
   
@@ -171,9 +173,11 @@ export const defaultConfig: GameConfig = {
 export const GameConfigUtils = {
   // Calculate total cells in grid
   getTotalCells: (config: GameConfig): number => {
-    return config.difficulty.preset[config.difficulty.level].width * config.difficulty.preset[config.difficulty.level].height * config.difficulty.preset[config.difficulty.level].depth
+    const level = config.difficulty.level as keyof typeof config.difficulty.preset;
+    const preset = config.difficulty.preset[level];
+    return preset.width * preset.height * preset.depth;
   },
-  
+
   // Calculate mine density percentage
   getMineDensity: (config: GameConfig): number => {
     const totalCells = GameConfigUtils.getTotalCells(config)
@@ -181,8 +185,9 @@ export const GameConfigUtils = {
   },
   
   // Apply difficulty preset
-  applyDifficultyPreset: (config: GameConfig, level: 'beginner' | 'intermediate' | 'expert'): GameConfig => {
-    const preset = config.difficulty.preset[level]
+  applyDifficultyPreset: (config: GameConfig, level: 'beginner' | 'intermediate' | 'expert' /* | 'flatscreen' */): GameConfig => {
+    // Only allow valid keys for preset
+    const preset = config.difficulty.preset[level as keyof typeof config.difficulty.preset];
     return {
       ...config,
       difficulty: { ...config.difficulty, level },

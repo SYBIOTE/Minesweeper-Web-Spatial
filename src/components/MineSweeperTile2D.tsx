@@ -10,7 +10,7 @@ type MinesweeperTile2DProps = {
     z: number
   }
   index?: number
-  variant?: 'empty' | 'bomb' | 'flag' | 'number'
+  variant?: 'empty' | 'revealed' | 'bomb' | 'flag' | 'number'
   number?: number
   config?: GameConfig
   active?: boolean
@@ -26,11 +26,10 @@ const MinesweeperTile2DComponent = ({ position, index, variant = 'empty', number
   // Handle position-based logic
   const handlePosition = useCallback(() => {
     if (position) {
-      console.log(`MinesweeperUnit2D at position (${position.x}, ${position.y}, ${position.z}) - Index: ${index}`)
       // You can add position-specific logic here
       // For example, different variants based on position, special effects, etc.
     }
-  }, [position, index])
+  }, [position])
 
   // Call position handler when component mounts or position changes
   useEffect(() => {
@@ -221,6 +220,29 @@ const MinesweeperTile2DComponent = ({ position, index, variant = 'empty', number
           )
         }
         return null
+
+      case 'revealed':
+        return (
+          <svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 100 100"
+          >
+            {/* Revealed empty cell - darker background */}
+            <rect
+              x="20"
+              y="20"
+              width="60"
+              height="60"
+              fill="rgba(0,0,0,0.3)"
+              stroke="rgba(255,255,255,0.2)"
+              strokeWidth="1"
+              rx="8"
+            />
+            {/* Subtle center dot to indicate it's revealed */}
+            <circle cx="50" cy="50" r="3" fill="rgba(255,255,255,0.3)" />
+          </svg>
+        )
 
       case 'empty':
       default:
