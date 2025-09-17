@@ -1,12 +1,5 @@
 // Game Configuration for 3D Spatial Minesweeper
-export interface GameConfig {
-  // Grid dimensions
-  grid: {
-    width: number
-    height: number
-    depth: number
-  }
-  
+export interface GameConfig {  
   // Mine settings
   mines: {
     count: number
@@ -15,7 +8,7 @@ export interface GameConfig {
   
   // Difficulty presets
   difficulty: {
-    level: 'beginner' | 'intermediate' | 'expert' | 'custom'
+    level: 'beginner' | 'intermediate' | 'expert' 
     preset: {
       beginner: { width: number, height: number, depth: number, mines: number }
       intermediate: { width: number, height: number, depth: number, mines: number }
@@ -90,11 +83,6 @@ export interface GameConfig {
 
 // Default configuration
 export const defaultConfig: GameConfig = {
-  grid: {
-    width: 16,
-    height: 16,
-    depth: 2
-  },
   
   mines: {
     count: 40,
@@ -107,7 +95,7 @@ export const defaultConfig: GameConfig = {
       beginner: { width: 5, height: 5, depth: 5, mines: 10 },
       intermediate: { width: 7, height: 7, depth: 7, mines: 15 },
       expert: { width: 11, height: 11, depth: 11, mines: 20 }
-    }
+    } 
   },
   
   spatial: {
@@ -183,7 +171,7 @@ export const defaultConfig: GameConfig = {
 export const GameConfigUtils = {
   // Calculate total cells in grid
   getTotalCells: (config: GameConfig): number => {
-    return config.grid.width * config.grid.height * config.grid.depth
+    return config.difficulty.preset[config.difficulty.level].width * config.difficulty.preset[config.difficulty.level].height * config.difficulty.preset[config.difficulty.level].depth
   },
   
   // Calculate mine density percentage
@@ -198,14 +186,13 @@ export const GameConfigUtils = {
     return {
       ...config,
       difficulty: { ...config.difficulty, level },
-      grid: {
-        width: preset.width,
-        height: preset.height,
-        depth: preset.depth
+      spatial: {
+        ...config.spatial,
+        ...preset
       },
       mines: {
         count: preset.mines,
-        density: (preset.mines / (preset.width * preset.height * preset.depth)) * 100
+        density: (preset.mines / (config.difficulty.preset[config.difficulty.level].width * config.difficulty.preset[config.difficulty.level].height * config.difficulty.preset[config.difficulty.level].depth)) * 100
       }
     }
   },
@@ -214,11 +201,11 @@ export const GameConfigUtils = {
   validateConfig: (config: GameConfig): string[] => {
     const errors: string[] = []
     
-    if (config.grid.width < 1 || config.grid.height < 1 || config.grid.depth < 1) {
+    if (config.difficulty.preset[config.difficulty.level].width < 1 || config.difficulty.preset[config.difficulty.level].height < 1 || config.difficulty.preset[config.difficulty.level].depth < 1) {
       errors.push('Grid dimensions must be at least 1x1x1')
     }
     
-    if (config.grid.width > 50 || config.grid.height > 50 || config.grid.depth > 10) {
+    if (config.difficulty.preset[config.difficulty.level].width > 50 || config.difficulty.preset[config.difficulty.level].height > 50 || config.difficulty.preset[config.difficulty.level].depth > 10) {
       errors.push('Grid dimensions too large (max 50x50x10)')
     }
     
@@ -244,7 +231,7 @@ export const GameConfigUtils = {
   
   // Calculate optimal camera position
   getOptimalCameraPosition: (config: GameConfig): { x: number, y: number, z: number } => {
-    const { width, height, depth } = config.grid
+    const { width, height, depth } = config.difficulty.preset[config.difficulty.level]
     const { cardSize, cardSpacing, cameraDistance, cameraHeight } = config.spatial
     
     const gridWidth = width * (cardSize + cardSpacing) - cardSpacing

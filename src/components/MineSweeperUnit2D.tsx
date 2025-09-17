@@ -1,24 +1,46 @@
-import { memo } from 'react'
+import { memo, useEffect, useCallback } from 'react'
 import type { GameConfig } from '../AppConfig'
 import defaultConfig from '../AppConfig'
 
 type MinesweeperUnit2DProps = {
+  size?: number
+  position?: {
+    x: number
+    y: number
+    z: number
+  }
+  index?: number
   variant?: 'empty' | 'bomb' | 'flag' | 'number'
   number?: number
   config?: GameConfig
   active?: boolean
+  onClick?: () => void
 }
 
-const MinesweeperUnit2DComponent = ({ variant = 'empty', number, config = defaultConfig, active = true }: MinesweeperUnit2DProps) => {
+const MinesweeperUnit2DComponent = ({ position, index, variant = 'empty', number, config = defaultConfig, active = true, onClick, size }: MinesweeperUnit2DProps) => {
   const unrevealedColor = config.visual.cardColors.unrevealed
   const mineColor = config.visual.cardColors.mine
   const flagColor = config.visual.cardColors.flag
   const numberColors = config.visual.cardColors.number
 
+  // Handle position-based logic
+  const handlePosition = useCallback(() => {
+    if (position) {
+      console.log(`MinesweeperUnit2D at position (${position.x}, ${position.y}, ${position.z}) - Index: ${index}`)
+      // You can add position-specific logic here
+      // For example, different variants based on position, special effects, etc.
+    }
+  }, [position, index])
+
+  // Call position handler when component mounts or position changes
+  useEffect(() => {
+    handlePosition()
+  }, [handlePosition])
+
   const getCardStyle = () => {
     const baseStyle: React.CSSProperties = {
-      width: '100%',
-      height: '100%',
+      width: `${size}px`,
+      height: `${size}px`,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -29,6 +51,14 @@ const MinesweeperUnit2DComponent = ({ variant = 'empty', number, config = defaul
       boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 8px rgba(0,0,0,0.3)',
       position: 'relative',
       overflow: 'hidden'
+    }
+
+    // Add position-specific styling if position is provided
+    if (position) {
+      baseStyle.position = 'absolute'
+      baseStyle.left = `${position.x}px`
+      baseStyle.top = `${position.y}px`
+      baseStyle.transform = `translateZ(${position.z}px)`
     }
 
     return baseStyle
@@ -221,7 +251,7 @@ const MinesweeperUnit2DComponent = ({ variant = 'empty', number, config = defaul
             <circle cx="25" cy="75" r="2" fill="rgba(255,255,255,0.1)" />
             <circle cx="75" cy="75" r="2" fill="rgba(255,255,255,0.1)" />
           </svg>
-        )
+      )
     }
   }
 
@@ -245,7 +275,15 @@ const MinesweeperUnit2DComponent = ({ variant = 'empty', number, config = defaul
   }
 
   return (
-    <div enable-xr style={getCardStyle()}>
+    <div 
+      onClick={onClick}
+      enable-xr
+      data-index={index}
+      style={{
+        ...getCardStyle(),
+        cursor: 'pointer'
+      } as React.CSSProperties}
+    >
       {renderContent()}
     </div>
   )
