@@ -5,14 +5,14 @@ import { Text } from '@react-three/drei'
 import type { GameConfig } from '../AppConfig'
 import defaultConfig from '../AppConfig'
 
-type MinesweeperUnitProps = {
+type MinesweeperTileProps = {
   variant?: 'empty' | 'bomb' | 'flag' | 'number'
   number?: number
   config?: GameConfig
   active?: boolean
 }
 
-const CardContent3D = ({ variant = 'empty', number, config }: { variant?: MinesweeperUnitProps['variant'], number?: number, config: GameConfig }) => {
+const CardContent3D = ({ variant = 'empty', number, config }: { variant?: MinesweeperTileProps['variant'], number?: number, config: GameConfig }) => {
   const size = config.spatial.cardSize
   const unrevealedColor = config.visual.cardColors.unrevealed
   const mineColor = config.visual.cardColors.mine
@@ -76,7 +76,7 @@ const CardContent3D = ({ variant = 'empty', number, config }: { variant?: Minesw
   )
 }
 
-const MinesweeperUnitComponent = ({ variant = 'empty', number, config = defaultConfig, active = true }: MinesweeperUnitProps) => {
+const MinesweeperTileComponent = ({ variant = 'empty', number, config = defaultConfig, active = true }: MinesweeperTileProps) => {
   if (!active) {
     return (
       <div style={{ 
@@ -128,4 +128,4 @@ const MinesweeperUnitComponent = ({ variant = 'empty', number, config = defaultC
 }
 
 // Memoize the component to prevent re-renders when services don't change
-export const MinesweeperUnit = memo(MinesweeperUnitComponent)
+export const MinesweeperUnit = memo(MinesweeperTileComponent)

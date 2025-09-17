@@ -2,7 +2,7 @@ import { memo, useEffect, useCallback } from 'react'
 import type { GameConfig } from '../AppConfig'
 import defaultConfig from '../AppConfig'
 
-type MinesweeperUnit2DProps = {
+type MinesweeperTile2DProps = {
   size?: number
   position?: {
     x: number
@@ -15,10 +15,10 @@ type MinesweeperUnit2DProps = {
   config?: GameConfig
   active?: boolean
   onClick?: () => void
+  onContextMenu?: (e: React.MouseEvent) => void
 }
 
-const MinesweeperUnit2DComponent = ({ position, index, variant = 'empty', number, config = defaultConfig, active = true, onClick, size }: MinesweeperUnit2DProps) => {
-  const unrevealedColor = config.visual.cardColors.unrevealed
+const MinesweeperTile2DComponent = ({ position, index, variant = 'empty', number, config = defaultConfig, active = true, onClick, onContextMenu, size }: MinesweeperTile2DProps) => {
   const mineColor = config.visual.cardColors.mine
   const flagColor = config.visual.cardColors.flag
   const numberColors = config.visual.cardColors.number
@@ -273,6 +273,7 @@ const MinesweeperUnit2DComponent = ({ position, index, variant = 'empty', number
   return (
     <div 
       onClick={onClick}
+      onContextMenu={onContextMenu}
       enable-xr
       data-index={index}
       style={{
@@ -286,4 +287,4 @@ const MinesweeperUnit2DComponent = ({ position, index, variant = 'empty', number
 }
 
 // Memoize the component to prevent re-renders when services don't change
-export const MinesweeperUnit2D = memo(MinesweeperUnit2DComponent)
+export const MinesweeperUnit2D = memo(MinesweeperTile2DComponent)

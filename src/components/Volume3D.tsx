@@ -1,13 +1,24 @@
 import { memo, useMemo } from 'react'
 import type { GameConfig } from '../AppConfig'
-import { MinesweeperUnit2D } from './MineSweeperUnit2D'
+import { MinesweeperUnit2D } from './MineSweeperTile2D'
 
 interface Volume3DProps {
   config: GameConfig
+  gameControls?: {
+    handleCellClick: (index: number, event?: React.MouseEvent) => void
+    handleCellRightClick: (index: number, event: React.MouseEvent) => void
+    getCellData: (index: number) => {
+      variant: 'empty' | 'bomb' | 'flag' | 'number'
+      number?: number
+      isRevealed: boolean
+      isFlagged: boolean
+      isMine: boolean
+    }
+  }
 }
 
 // will contain the 3d volume and responsible for generating the 3d grid of webspatial cards for minesweeper
-const Volume3DComponent = ({ config }: Volume3DProps) => {
+const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
   //const isSpatial = navigator.userAgent.includes("WebSpatial") || import.meta.env.XR_ENV === "avp"
   
   // Use config for grid dimensions
@@ -65,10 +76,21 @@ const Volume3DComponent = ({ config }: Volume3DProps) => {
   
   return (
     <> 
-      {gridPositions.map(({ x, y, z, index }) => (
+      {gridPositions.map(({ x, y, z, index }) => {
+        // Get cell data from game controls if available
+        const cellData = gameControls?.getCellData(index) || {
+          variant: 'empty' as const,
+          number: undefined,
+          isRevealed: false,
+          isFlagged: false,
+          isMine: false
+        }
+
+        return (
           <MinesweeperUnit2D 
             key={index}
-            variant="bomb" 
+            variant={cellData.variant}
+            number={cellData.number}
             config={config}
             active={true}
             size={cardSize}
@@ -78,8 +100,11 @@ const Volume3DComponent = ({ config }: Volume3DProps) => {
               z: z
             }}
             index={index}
+            onClick={() => gameControls?.handleCellClick(index)}
+            onContextMenu={(e) => gameControls?.handleCellRightClick(index, e)}
           />
-        ))}
+        )
+      })}
     </>        
   )
 }
