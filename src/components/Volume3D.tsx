@@ -27,17 +27,14 @@ const Volume3DComponent = ({ config }: Volume3DProps) => {
 
   const gridPositions = useMemo(() => {
     const positions = []
-    const totalWidth = gridWidth * (cardSize + cardSpacing) - cardSpacing
-    const totalHeight = gridHeight * (cardSize + cardSpacing) - cardSpacing
-    const totalDepth = gridDepth * (cardSize + cardSpacing) - cardSpacing
 
     for (let x = 0; x < gridWidth; x++) {
       for (let y = 0; y < gridHeight; y++) {
         for (let z = 0; z < gridDepth; z++) {
           // Center the grid at origin (0,0,0)
-          const posX = (x * (cardSize + cardSpacing)) - totalWidth / 2
-          const posY = (y * (cardSize + cardSpacing)) - totalHeight / 2
-          const posZ = (z * (cardSize + cardSpacing)) - totalDepth / 2
+          const posX = (x * (cardSize + cardSpacing)) 
+          const posY = (y * (cardSize + cardSpacing))  
+          const posZ = (z * (cardSize + cardSpacing))
 
           positions.push({ 
             x: posX, 

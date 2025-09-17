@@ -90,9 +90,9 @@ export const defaultConfig: GameConfig = {
   },
   
   difficulty: {
-    level: 'intermediate',
+    level: 'beginner',
     preset: {
-      beginner: { width: 5, height: 5, depth: 5, mines: 10 },
+      beginner: { width: 3, height: 3, depth: 3, mines: 5 },
       intermediate: { width: 7, height: 7, depth: 7, mines: 15 },
       expert: { width: 11, height: 11, depth: 11, mines: 20 }
     } 
