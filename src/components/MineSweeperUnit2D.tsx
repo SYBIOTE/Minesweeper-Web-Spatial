@@ -45,10 +45,7 @@ const MinesweeperUnit2DComponent = ({ position, index, variant = 'empty', number
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: '8px',
-      border: '2px solid rgba(255,255,255,0.2)',
-      background: `linear-gradient(135deg, ${unrevealedColor}88, ${unrevealedColor}44)`,
-      backdropFilter: 'blur(4px)',
-      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 8px rgba(0,0,0,0.3)',
+      background: `transparent`,
       position: 'absolute',
       overflow: 'hidden'
     }

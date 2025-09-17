@@ -31,7 +31,6 @@ const Volume3DComponent = ({ config }: Volume3DProps) => {
     // Calculate total grid dimensions
     const totalWidth = (gridWidth - 1) * (cardSize + cardSpacing) + cardSize
     const totalHeight = (gridHeight - 1) * (cardSize + cardSpacing) + cardSize
-    const totalDepth = (gridDepth - 1) * (cardSize + cardSpacing) + cardSize
 
     // Calculate center offsets to position grid in center of viewport
     const centerOffsetX = (window.innerWidth - totalWidth) / 2
