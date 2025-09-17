@@ -1,14 +1,2 @@
-## COPYRIGHT COMPANION INTELLIGENCE - LIFESCOPE INC
+# webspatial 3d minesweeper
 
-## DO NOT DISTRIBUTE
-
-## PRIVATE AND CONFIDENTIAL
-
-# CI Agent WebSpatial
-
-## Install
-
-```bash
-cp .env.local.default .env.local
-npm i
-```
