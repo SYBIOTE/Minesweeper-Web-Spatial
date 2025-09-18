@@ -44,6 +44,8 @@ const MinesweeperTile2DComponent = ({ position, index, variant = 'empty', number
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: '8px',
+      border: '1px solid rgba(0, 0, 0, 0.1)',
+
       background: `transparent`,
       position: 'absolute',
       overflow: 'hidden'
@@ -258,16 +260,16 @@ const MinesweeperTile2DComponent = ({ position, index, variant = 'empty', number
               y="20"
               width="60"
               height="60"
-              fill="rgba(255,255,255,0.05)"
-              stroke="rgba(255,255,255,0.1)"
+              fill="rgba(88, 87, 87, 0.12)"
+              stroke="rgba(255, 255, 255, 0.16)"
               strokeWidth="1"
               rx="8"
             />
             {/* Corner highlights */}
-            <circle cx="25" cy="25" r="2" fill="rgba(255,255,255,0.1)" />
-            <circle cx="75" cy="25" r="2" fill="rgba(255,255,255,0.1)" />
-            <circle cx="25" cy="75" r="2" fill="rgba(255,255,255,0.1)" />
-            <circle cx="75" cy="75" r="2" fill="rgba(255,255,255,0.1)" />
+            <circle cx="25" cy="25" r="2" fill="rgba(255,255,255,0.5)" />
+            <circle cx="75" cy="25" r="2" fill="rgba(255,255,255,0.5)" />
+            <circle cx="25" cy="75" r="2" fill="rgba(255,255,255,0.5)" />
+            <circle cx="75" cy="75" r="2" fill="rgba(255,255,255,0.5)" />
           </svg>
       )
     }

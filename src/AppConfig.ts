@@ -94,8 +94,8 @@ export const defaultConfig: GameConfig = {
     level: 'intermediate',
     preset: {
       beginner: { width: 3, height: 3, depth: 3, mines: 2 },
-      intermediate: { width: 7, height: 7, depth: 7, mines: 15 },
-      expert: { width: 11, height: 11, depth: 11, mines: 20 },
+      intermediate: { width: 5, height:5, depth: 5, mines: 10 },
+      expert: { width: 7, height: 7, depth: 7, mines: 30 },
       flatscreen: { width: 11, height: 11, depth: 1, mines: 20 }
     } 
   },
