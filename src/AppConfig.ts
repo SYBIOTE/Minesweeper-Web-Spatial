@@ -255,5 +255,69 @@ export const GameConfigUtils = {
   }
 }
 
+// Utility function to get preset with proper depth based on spatial mode
+export const getPresetForEnvironment = (
+  level: keyof typeof defaultConfig.difficulty.preset,
+  isSpatial: boolean
+) => {
+  const basePreset = defaultConfig.difficulty.preset[level]
+
+  if (!isSpatial) {
+    // In non-spatial mode, always use depth = 1
+    return {
+      ...basePreset,
+      depth: 1
+    }
+  }
+
+  return basePreset
+}
+
+// Utility function to calculate appropriate mine count for 2D mode
+const get2DMineCount = (totalCells: number): number => {
+  // For 2D mode, use a slightly lower density since games are smaller
+  const targetDensity = 0.12 // 12% mine density for 2D
+  const calculatedMines = Math.floor(totalCells * targetDensity)
+
+  // Ensure minimum of 1 mine and maximum of reasonable density
+  return Math.max(1, Math.min(calculatedMines, Math.floor(totalCells * 0.25)))
+}
+
+// Utility function to get config with environment-adjusted preset
+export const getConfigForEnvironment = (
+  level: keyof typeof defaultConfig.difficulty.preset,
+  isSpatial: boolean
+): GameConfig => {
+  const environmentPreset = getPresetForEnvironment(level, isSpatial)
+  const totalCells = environmentPreset.width * environmentPreset.height * environmentPreset.depth
+
+  // Calculate appropriate mine count based on environment
+  let mineCount: number
+  if (!isSpatial) {
+    // For 2D mode, calculate appropriate mine count
+    mineCount = get2DMineCount(totalCells)
+  } else {
+    // For 3D mode, use the base mine count from preset
+    mineCount = environmentPreset.mines
+  }
+
+  return {
+    ...defaultConfig,
+    difficulty: {
+      ...defaultConfig.difficulty,
+      level: level,
+      preset: {
+        ...defaultConfig.difficulty.preset,
+        [level]: environmentPreset
+      }
+    },
+    mines: {
+      ...defaultConfig.mines,
+      count: mineCount,
+      density: (mineCount / totalCells) * 100
+    }
+  }
+}
+
 // Export the default config as the main export
 export default defaultConfig

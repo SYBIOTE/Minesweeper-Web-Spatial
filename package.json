@@ -31,6 +31,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-i18next": "^15.7.2",
+    "react-router-dom": "^7.9.1",
     "three": "^0.178.0"
   },
   "devDependencies": {
@@ -45,6 +46,7 @@
     "@webspatial/platform-visionos": "^1.0.1",
     "@webspatial/vite-plugin": "^0.1.9",
     "autoprefixer": "^10.4.20",
+    "dotenv-cli": "^8.0.0",
     "eslint": "^9.32.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
@@ -56,7 +58,6 @@
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.0",
     "vite": "^7.1.0",
-    "vite-plugin-html": "^3.2.2",
-    "dotenv-cli": "^8.0.0"
+    "vite-plugin-html": "^3.2.2"
   }
 }

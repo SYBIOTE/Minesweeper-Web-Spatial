@@ -1,83 +1,62 @@
 
 
-import { useState } from 'react'
-import { Volume3D } from './components/Volume3D'
-import { GameController } from './components/GameController'
-import { defaultConfig } from './AppConfig'
+import { defaultConfig, type GameConfig } from './AppConfig'
+import { GameStartScene } from './components/GameStartScene'
 
 export const App = () => {
   const isSpatial = navigator.userAgent.includes("WebSpatial") || import.meta.env.XR_ENV === "avp"
-  
+
   // Game configuration - can be made dynamic later
   const gameConfig = defaultConfig
-  
-  // Game state
-  const [gameStats, setGameStats] = useState<{
-    revealedCount: number
-    flagCount: number
-    mineCount: number
-    remainingMines: number
-    progress: number
-    elapsedTime: number
-  } | null>(null)
-  
-  // Initialize game controller
-  const gameControls = GameController({
-    config: gameConfig,
-    onGameStateChange: () => {}, // We don't need to track game state changes in this component
-    onGameEnd: (won, stats) => {
-      setGameStats(stats)
-      console.log(won ? 'You won!' : 'Game Over!', stats)
+
+
+  // Scene handlers
+  const handleStartGame = (difficulty: keyof GameConfig['difficulty']['preset']) => {
+    // Initialize the minefield scene with proper WebSpatial configuration
+    if (typeof window !== 'undefined') {
+      try {
+        // Import initScene dynamically to avoid SSR issues
+        import('@webspatial/react-sdk').then(({ initScene }) => {
+          initScene('minefieldScene', (prevConfig) => {
+            return {
+              ...prevConfig,
+              defaultSize: {
+                width: 1200,
+                height: 800
+              }
+            }
+          })
+
+          // Open the minefield scene in a new window with difficulty parameter
+          window.open(`/minefield?difficulty=${difficulty}`, 'minefieldScene')
+        })
+      } catch (error) {
+        console.warn('WebSpatial SDK not available, opening in same window:', error)
+        // Fallback for non-spatial environments
+        if (window.location) {
+          window.location.href = `/minefield?difficulty=${difficulty}`
+        }
+      }
+    } else {
+      // Fallback for non-spatial environments (shouldn't happen in browser)
+      console.warn('Window not available')
     }
-  })
-  
+  }
+
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden text-white font-inter font-normal leading-relaxed" style={{ background: isSpatial ? 'none' : 'radial-gradient(ellipse at 50% -20%,rgba(0, 0, 0, 0.7) 0%, rgba(16,25,30,1) 100%)' }}>
-      {/* Game UI Header */}
-      <div className="flex justify-between items-center p-4 bg-black bg-opacity-50">
-        <div className="flex items-center space-x-4">
-          <h1 className="text-xl font-bold">3D Minesweeper</h1>
-          <div className="text-sm">
-            Mines: {gameStats?.remainingMines || gameConfig.difficulty.preset[gameConfig.difficulty.level].mines}
-          </div>
-          <div className="text-sm">
-            Progress: {gameStats?.progress || 0}%
-          </div>
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={gameControls.toggleFlagMode}
-            className={`px-3 py-1 rounded text-sm ${
-              gameControls.flagMode 
-                ? 'bg-yellow-600 text-white' 
-                : 'bg-gray-600 text-gray-200'
-            }`}
-          >
-            {gameControls.flagMode ? 'Flag Mode' : 'Reveal Mode'}
-          </button>
-          
-          <button
-            onClick={gameControls.resetGame}
-            className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
-          >
-            Reset
-          </button>
-        </div>
-      </div>
-
-      {/* Game Status */}
-      {gameControls.isGameOver && (
-        <div className={`text-center py-2 text-lg font-bold ${
-          gameControls.isWon ? 'text-green-400' : 'text-red-400'
-        }`}>
-          {gameControls.isWon ? '🎉 You Won! 🎉' : '💥 Game Over! 💥'}
-        </div>
-      )}
-
-      <div className="flex-1 relative h-full w-full">
-        <Volume3D config={gameConfig} gameControls={gameControls} />
-      </div>
+    <div
+      className="flex flex-col h-screen w-screen overflow-hidden text-white font-inter font-normal leading-relaxed"
+      style={{
+        background: isSpatial ? 'none' : 'radial-gradient(ellipse at 50% -20%,rgba(0, 0, 0, 0.7) 0%, rgba(16,25,30,1) 100%)',
+        '--xr-scene': 'main',
+        enableXr: true
+      } as React.CSSProperties}
+    >
+      <GameStartScene
+        config={gameConfig}
+        isSpatial={isSpatial}
+        onStartGame={handleStartGame}
+      />
     </div>
   )
 }
