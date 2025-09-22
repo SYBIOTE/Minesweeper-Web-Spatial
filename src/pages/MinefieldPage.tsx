@@ -283,8 +283,8 @@ export const MinefieldPage: React.FC = () => {
           return {
             ...defaultConfig,
             defaultSize: {
-              width: 1200,
-              height: 800
+              width: 1000,
+              height: 1000
             }
           }
         } else {
