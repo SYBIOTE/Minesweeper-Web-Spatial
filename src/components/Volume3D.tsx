@@ -38,58 +38,34 @@ const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
 
   const gridPositions = useMemo(() => {
     const positions = []
-    const isSpatial = navigator.userAgent.includes("WebSpatial") || import.meta.env.XR_ENV === "avp"
 
-    if (isSpatial) {
-      // In spatial mode, position cards in proper 3D space
-      const { spatial } = config
-      const centerX = 0 // Center in spatial space
-      const centerY = spatial.cameraHeight // Camera height level
-      const centerZ = spatial.cameraDistance // Distance from camera
 
-      for (let x = 0; x < gridWidth; x++) {
-        for (let y = 0; y < gridHeight; y++) {
-          for (let z = 0; z < gridDepth; z++) {
-            // Calculate position relative to grid center
-            const relativeX = (x - (gridWidth - 1) / 2) * (spatial.cardSize + spatial.cardSpacing)
-            const relativeY = (y - (gridHeight - 1) / 2) * (spatial.cardSize + spatial.cardSpacing)
-            const relativeZ = (z - (gridDepth - 1) / 2) * (spatial.cardSize + spatial.cardSpacing)
-
-            positions.push({
-              x: centerX + relativeX,
-              y: centerY + relativeY,
-              z: centerZ + relativeZ,
-              index: x + y * gridWidth + z * gridWidth * gridHeight
-            })
-          }
-        }
-      }
-    } else {
       // In 2D mode, position cards in viewport
-      const totalWidth = (gridWidth - 1) * (cardSize + cardSpacing) + cardSize
-      const totalHeight = (gridHeight - 1) * (cardSize + cardSpacing) + cardSize
+    const totalWidth = (gridWidth - 1) * (cardSize + cardSpacing) + cardSize
+    const totalHeight = (gridHeight - 1) * (cardSize + cardSpacing) + cardSize
 
-      const centerOffsetX = (window.innerWidth - totalWidth) / 2
-      const centerOffsetY = (window.innerHeight - totalHeight) / 2
+    const centerOffsetX = (window.innerWidth - totalWidth) / 2
+    const centerOffsetY = (window.innerHeight - totalHeight) / 2
 
-      for (let x = 0; x < gridWidth; x++) {
-        for (let y = 0; y < gridHeight; y++) {
-          for (let z = 0; z < gridDepth; z++) {
-            const relativeX = x * (cardSize + cardSpacing)
-            const relativeY = y * (cardSize + cardSpacing)
-            const relativeZ = z * (cardSize + cardSpacing)
+    for (let x = 0; x < gridWidth; x++) {
+      for (let y = 0; y < gridHeight; y++) {
+        for (let z = 0; z < gridDepth; z++) {
+          const relativeX = x * (cardSize + cardSpacing)
+          const relativeY = y * (cardSize + cardSpacing)
+          const relativeZ = z * (cardSize + cardSpacing)
 
-            positions.push({
-              x: relativeX + centerOffsetX,
-              y: relativeY + centerOffsetY,
-              z: relativeZ,
-              index: x + y * gridWidth + z * gridWidth * gridHeight
-            })
-          }
+          positions.push({
+            x: relativeX + centerOffsetX,
+            y: relativeY + centerOffsetY,
+            z: relativeZ,
+            index: x + y * gridWidth + z * gridWidth * gridHeight
+          })
         }
       }
     }
+  
 
+    console.log(positions)
     return positions
   }, [gridWidth, gridHeight, gridDepth, cardSize, cardSpacing, config])
   // For 2D units, we don't need to limit active instances since they're lightweight
