@@ -36,8 +36,16 @@ const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
   const gridHeight = preset[level]?.height
   const gridDepth = preset[level]?.depth
 
-  const gridPositions = useMemo(() => {
-    const positions = []
+  // Group positions by z-layer for proper depth handling
+  const layerData = useMemo(() => {
+    const layers: { [key: number]: Array<{
+      x: number
+      y: number
+      z: number
+      gridX: number
+      gridY: number
+      index: number
+    }> } = {}
 
     for (let x = 0; x < gridWidth; x++) {
       for (let y = 0; y < gridHeight; y++) {
@@ -46,19 +54,24 @@ const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
           const relativeY = y * (cardSize + cardSpacing)
           const relativeZ = z * (cardSize + cardSpacing)
 
-          positions.push({
+          const position = {
             x: relativeX,
             y: relativeY,
             z: relativeZ,
             gridX: x + 1, // CSS Grid is 1-indexed
             gridY: y + 1,
             index: x + y * gridWidth + z * gridWidth * gridHeight
-          })
+          }
+
+          if (!layers[z]) {
+            layers[z] = []
+          }
+          layers[z].push(position)
         }
       }
     }
 
-    return positions
+    return layers
   }, [gridWidth, gridHeight, gridDepth, cardSize, cardSpacing])
   // For 2D units, we don't need to limit active instances since they're lightweight
   // All cards are active by default (no performance concerns with CSS/SVG)
@@ -73,53 +86,64 @@ const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
     position: 'relative'
   }
 
-  // Generate CSS Grid template for 3D positioning
-  const gridStyle: React.CSSProperties = {
-    display: 'grid',
-    gridTemplateColumns: `repeat(${gridWidth}, ${cardSize + cardSpacing}px)`,
-    gridTemplateRows: `repeat(${gridHeight}, ${cardSize + cardSpacing}px)`,
-    gap: `${cardSpacing}px`,
-    perspective: '1000px', // Add perspective for 3D effect
-    transformStyle: 'preserve-3d'
-  }
+  // Grid styling is now handled per layer for WebSpatial depth
 
   return (
     <div style={containerStyle}>
-      <div style={gridStyle}>
-      {gridPositions.map(({ z, gridX, gridY, index }) => {
-        // Get cell data from game controls if available
-        const cellData = gameControls?.getCellData(index) || {
-          variant: 'empty' as const,
-          number: undefined,
-          isRevealed: false,
-          isFlagged: false,
-          isMine: false
-        }
+      {Object.entries(layerData).map(([layerZ, positions]) => (
+        <div
+          key={layerZ}
+          style={{
+            '--xr-back': parseInt(layerZ) * Math.round(cardSpacing / 10), // Convert spacing to WebSpatial units
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            display: 'grid',
+            gridTemplateColumns: `repeat(${gridWidth}, ${cardSize + cardSpacing}px)`,
+            gridTemplateRows: `repeat(${gridHeight}, ${cardSize + cardSpacing}px)`,
+            gap: `${cardSpacing}px`,
+            justifyContent: 'center',
+            alignItems: 'center'
+          } as React.CSSProperties}
+        >
+          {positions.map(({ gridX, gridY, index }: { gridX: number; gridY: number; index: number }) => {
+            // Get cell data from game controls if available
+            const cellData = gameControls?.getCellData(index) || {
+              variant: 'empty' as const,
+              number: undefined,
+              isRevealed: false,
+              isFlagged: false,
+              isMine: false
+            }
 
-        return (
-          <div
-            key={index}
-            style={{
-              gridColumn: gridX,
-              gridRow: gridY,
-              transform: `translateZ(${z}px)`,
-              transformStyle: 'preserve-3d'
-            }}
-          >
-            <MinesweeperUnit2D
-              variant={cellData.variant}
-              number={cellData.number}
-              config={config}
-              active={true}
-              size={cardSize}
-              index={index}
-              onClick={() => gameControls?.handleCellClick(index)}
-              onContextMenu={(e) => gameControls?.handleCellRightClick(index, e)}
-            />
-          </div>
-        )
-      })}
-      </div>
+            return (
+              <div
+                key={index}
+                style={{
+                  gridColumn: gridX,
+                  gridRow: gridY,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <MinesweeperUnit2D
+                  variant={cellData.variant}
+                  number={cellData.number}
+                  config={config}
+                  active={true}
+                  size={cardSize}
+                  index={index}
+                  onClick={() => gameControls?.handleCellClick(index)}
+                  onContextMenu={(e) => gameControls?.handleCellRightClick(index, e)}
+                />
+              </div>
+            )
+          })}
+        </div>
+      ))}
     </div>
   )
 }
