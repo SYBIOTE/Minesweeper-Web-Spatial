@@ -277,11 +277,29 @@ export const MinefieldPage: React.FC = () => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.xrCurrentSceneDefaults = async (defaultConfig) => {
-        return {
-          ...defaultConfig,
-          defaultSize: {
-            width: 1200,
-            height: 800
+        const isSpatial = navigator.userAgent.includes("WebSpatial") || import.meta.env.XR_ENV === "avp"
+
+        if (isSpatial) {
+          return {
+            ...defaultConfig,
+            defaultSize: {
+              width: 1200,
+              height: 800
+            },
+            // Position this scene to the side of the main scene
+            position: {
+              x: 1500, // Move to the right of main scene
+              y: 0,
+              z: 0
+            }
+          }
+        } else {
+          return {
+            ...defaultConfig,
+            defaultSize: {
+              width: 1200,
+              height: 800
+            }
           }
         }
       }

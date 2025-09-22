@@ -23,6 +23,12 @@ export const App = () => {
               defaultSize: {
                 width: 1200,
                 height: 800
+              },
+              // Position the new scene to the side of the current scene
+              position: {
+                x: 1500, // Move to the right
+                y: 0,
+                z: 0
               }
             }
           })

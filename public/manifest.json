@@ -7,7 +7,7 @@
   "start_url": "/",
   "xr_main_scene": {
     "default_size": {
-      "width": 2000,
+      "width": 1000,
       "height": 2000
     }
   },

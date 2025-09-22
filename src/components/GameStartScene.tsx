@@ -250,6 +250,19 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({
             🕶️ Spatial Environment Detected - Ready for 3D Immersion!
           </div>
         )}
+
+        {/* Spatial Scene Transition Hint */}
+        {isSpatial && (
+          <div
+            className="mt-4 text-sm text-blue-300 font-medium"
+            style={{
+              '--xr-elevation': '0.03',
+              enableXr: true
+            } as React.CSSProperties}
+          >
+            🎮 Starting game will open in a new spatial scene
+          </div>
+        )}
       </div>
     </div>
   )
