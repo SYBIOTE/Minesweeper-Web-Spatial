@@ -285,12 +285,6 @@ export const MinefieldPage: React.FC = () => {
             defaultSize: {
               width: 1200,
               height: 800
-            },
-            // Position this scene to the side of the main scene
-            position: {
-              x: 1500, // Move to the right of main scene
-              y: 0,
-              z: 0
             }
           }
         } else {
