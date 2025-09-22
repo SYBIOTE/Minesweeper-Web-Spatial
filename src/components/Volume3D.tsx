@@ -39,14 +39,6 @@ const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
   const gridPositions = useMemo(() => {
     const positions = []
 
-
-      // In 2D mode, position cards in viewport
-    const totalWidth = (gridWidth - 1) * (cardSize + cardSpacing) + cardSize
-    const totalHeight = (gridHeight - 1) * (cardSize + cardSpacing) + cardSize
-
-    const centerOffsetX = (window.innerWidth - totalWidth) / 2
-    const centerOffsetY = (window.innerHeight - totalHeight) / 2
-
     for (let x = 0; x < gridWidth; x++) {
       for (let y = 0; y < gridHeight; y++) {
         for (let z = 0; z < gridDepth; z++) {
@@ -55,25 +47,37 @@ const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
           const relativeZ = z * (cardSize + cardSpacing)
 
           positions.push({
-            x: relativeX + centerOffsetX,
-            y: relativeY + centerOffsetY,
+            x: relativeX,
+            y: relativeY,
             z: relativeZ,
+            gridX: x + 1, // CSS Grid is 1-indexed
+            gridY: y + 1,
             index: x + y * gridWidth + z * gridWidth * gridHeight
           })
         }
       }
     }
-  
 
-    console.log(positions)
     return positions
-  }, [gridWidth, gridHeight, gridDepth, cardSize, cardSpacing, config])
+  }, [gridWidth, gridHeight, gridDepth, cardSize, cardSpacing])
   // For 2D units, we don't need to limit active instances since they're lightweight
   // All cards are active by default (no performance concerns with CSS/SVG)
   
+  // Generate CSS Grid template for 3D positioning
+  const gridStyle: React.CSSProperties = {
+    display: 'grid',
+    gridTemplateColumns: `repeat(${gridWidth}, ${cardSize + cardSpacing}px)`,
+    gridTemplateRows: `repeat(${gridHeight}, ${cardSize + cardSpacing}px)`,
+    gap: `${cardSpacing}px`,
+    width: 'fit-content',
+    height: 'fit-content',
+    perspective: '1000px', // Add perspective for 3D effect
+    position: 'relative'
+  }
+
   return (
-    <> 
-      {gridPositions.map(({ x, y, z, index }) => {
+    <div style={gridStyle}>
+      {gridPositions.map(({ z, gridX, gridY, index }) => {
         // Get cell data from game controls if available
         const cellData = gameControls?.getCellData(index) || {
           variant: 'empty' as const,
@@ -84,25 +88,29 @@ const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
         }
 
         return (
-          <MinesweeperUnit2D 
+          <div
             key={index}
-            variant={cellData.variant}
-            number={cellData.number}
-            config={config}
-            active={true}
-            size={cardSize}
-            position={{ 
-              x: x,
-              y: y,
-              z: z
+            style={{
+              gridColumn: gridX,
+              gridRow: gridY,
+              transform: `translateZ(${z}px)`,
+              transformStyle: 'preserve-3d'
             }}
-            index={index}
-            onClick={() => gameControls?.handleCellClick(index)}
-            onContextMenu={(e) => gameControls?.handleCellRightClick(index, e)}
-          />
+          >
+            <MinesweeperUnit2D
+              variant={cellData.variant}
+              number={cellData.number}
+              config={config}
+              active={true}
+              size={cardSize}
+              index={index}
+              onClick={() => gameControls?.handleCellClick(index)}
+              onContextMenu={(e) => gameControls?.handleCellRightClick(index, e)}
+            />
+          </div>
         )
       })}
-    </>        
+    </div>
   )
 }
 

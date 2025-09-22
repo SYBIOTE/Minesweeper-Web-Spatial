@@ -1,14 +1,9 @@
-import { memo, useEffect, useCallback } from 'react'
+import { memo } from 'react'
 import type { GameConfig } from '../AppConfig'
 import defaultConfig from '../AppConfig'
 
 type MinesweeperTile2DProps = {
   size?: number
-  position?: {
-    x: number
-    y: number
-    z: number
-  }
   index?: number
   variant?: 'empty' | 'revealed' | 'bomb' | 'flag' | 'number'
   number?: number
@@ -18,23 +13,12 @@ type MinesweeperTile2DProps = {
   onContextMenu?: (e: React.MouseEvent) => void
 }
 
-const MinesweeperTile2DComponent = ({ position, index, variant = 'empty', number, config = defaultConfig, active = true, onClick, onContextMenu, size }: MinesweeperTile2DProps) => {
+const MinesweeperTile2DComponent = ({ index, variant = 'empty', number, config = defaultConfig, active = true, onClick, onContextMenu, size }: MinesweeperTile2DProps) => {
   const mineColor = config.visual.cardColors.mine
   const flagColor = config.visual.cardColors.flag
   const numberColors = config.visual.cardColors.number
 
-  // Handle position-based logic
-  const handlePosition = useCallback(() => {
-    if (position) {
-      // You can add position-specific logic here
-      // For example, different variants based on position, special effects, etc.
-    }
-  }, [position])
-
-  // Call position handler when component mounts or position changes
-  useEffect(() => {
-    handlePosition()
-  }, [handlePosition])
+  // Position-based logic removed - now handled by CSS Grid in parent component
 
   const getCardStyle = () => {
     const baseStyle: React.CSSProperties = {
@@ -45,17 +29,8 @@ const MinesweeperTile2DComponent = ({ position, index, variant = 'empty', number
       justifyContent: 'center',
       borderRadius: '8px',
       border: '1px solid rgba(0, 0, 0, 0.1)',
-
       background: `transparent`,
-      position: 'absolute',
       overflow: 'hidden'
-    }
-
-    // Add position-specific styling if position is provided
-    if (position) {
-      baseStyle.left = `${position.x}px`
-      baseStyle.top = `${position.y}px`
-      baseStyle.transform = `translateZ(${position.z}px)`
     }
 
     return baseStyle
