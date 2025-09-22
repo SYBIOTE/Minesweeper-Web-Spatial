@@ -63,20 +63,29 @@ const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
   // For 2D units, we don't need to limit active instances since they're lightweight
   // All cards are active by default (no performance concerns with CSS/SVG)
   
+  // Container style to center the grid in available space
+  const containerStyle: React.CSSProperties = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    position: 'relative'
+  }
+
   // Generate CSS Grid template for 3D positioning
   const gridStyle: React.CSSProperties = {
     display: 'grid',
     gridTemplateColumns: `repeat(${gridWidth}, ${cardSize + cardSpacing}px)`,
     gridTemplateRows: `repeat(${gridHeight}, ${cardSize + cardSpacing}px)`,
     gap: `${cardSpacing}px`,
-    width: 'fit-content',
-    height: 'fit-content',
     perspective: '1000px', // Add perspective for 3D effect
-    position: 'relative'
+    transformStyle: 'preserve-3d'
   }
 
   return (
-    <div style={gridStyle}>
+    <div style={containerStyle}>
+      <div style={gridStyle}>
       {gridPositions.map(({ z, gridX, gridY, index }) => {
         // Get cell data from game controls if available
         const cellData = gameControls?.getCellData(index) || {
@@ -110,6 +119,7 @@ const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
           </div>
         )
       })}
+      </div>
     </div>
   )
 }
