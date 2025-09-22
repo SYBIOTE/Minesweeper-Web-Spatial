@@ -86,28 +86,36 @@ const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
     position: 'relative'
   }
 
+  Object.entries(layerData).map(([layerZ, positions]) => {
+    console.log(`Layer Z: ${layerZ}, Cards: ${positions.length}`)
+  })
   // Grid styling is now handled per layer for WebSpatial depth
 
-  return (
+   return (
     <div style={containerStyle}>
-      {Object.entries(layerData).map(([layerZ, positions]) => (
-        <div
-          key={layerZ}
-          style={{
-            '--xr-back': parseInt(layerZ) * Math.round(cardSpacing / 10), // Convert spacing to WebSpatial units
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            display: 'grid',
-            gridTemplateColumns: `repeat(${gridWidth}, ${cardSize + cardSpacing}px)`,
-            gridTemplateRows: `repeat(${gridHeight}, ${cardSize + cardSpacing}px)`,
-            gap: `${cardSpacing}px`,
-            justifyContent: 'center',
-            alignItems: 'center'
-          } as React.CSSProperties}
-        >
+      {Object.entries(layerData).map(([layerZ, positions]) => {
+        // Get the actual Z position from the first position in this layer
+        const actualZPosition = positions[0]?.z || 0
+
+        return (
+          <div
+            enable-xr
+            key={layerZ}
+            style={{
+              '--xr-back': actualZPosition, // Use actual Z position converted to WebSpatial units
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              display: 'grid',
+              gridTemplateColumns: `repeat(${gridWidth}, ${cardSize + cardSpacing}px)`,
+              gridTemplateRows: `repeat(${gridHeight}, ${cardSize + cardSpacing}px)`,
+              gap: `${cardSpacing}px`,
+              justifyContent: 'center',
+              alignItems: 'center'
+            } as React.CSSProperties}
+          >
           {positions.map(({ gridX, gridY, index }: { gridX: number; gridY: number; index: number }) => {
             // Get cell data from game controls if available
             const cellData = gameControls?.getCellData(index) || {
@@ -143,7 +151,8 @@ const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
             )
           })}
         </div>
-      ))}
+        )
+      })}
     </div>
   )
 }
