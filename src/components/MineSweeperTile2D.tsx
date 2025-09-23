@@ -1,6 +1,8 @@
 import { memo } from 'react'
 import type { GameConfig } from '../AppConfig'
 import defaultConfig from '../AppConfig'
+import MineSVG from '../assets/svgs/mine'
+import FlagSVG from '../assets/svgs/flag'
 
 type MinesweeperTile2DProps = {
   size?: number
@@ -15,7 +17,6 @@ type MinesweeperTile2DProps = {
 
 const MinesweeperTile2DComponent = ({ index, variant = 'empty', number, config = defaultConfig, active = true, onClick, onContextMenu, size }: MinesweeperTile2DProps) => {
   const mineColor = config.visual.cardColors.mine
-  const flagColor = config.visual.cardColors.flag
   const numberColors = config.visual.cardColors.number
 
   // Position-based logic removed - now handled by CSS Grid in parent component
@@ -40,133 +41,24 @@ const MinesweeperTile2DComponent = ({ index, variant = 'empty', number, config =
     switch (variant) {
       case 'bomb':
         return (
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 100 100"
-            style={{ filter: `drop-shadow(0 0 8px ${mineColor}44)` }}
-          >
-            {/* Bomb body */}
-            <circle
-              cx="50"
-              cy="50"
-              r="35"
-              fill={`url(#bombGradient)`}
-              stroke={mineColor}
-              strokeWidth="3"
-            />
-            {/* Bomb highlight */}
-            <circle
-              cx="40"
-              cy="40"
-              r="15"
-              fill={`url(#bombHighlight)`}
-              opacity="0.6"
-            />
-            {/* Bomb fuse */}
-            <rect
-              x="48"
-              y="15"
-              width="4"
-              height="20"
-              fill="#8B4513"
-              rx="2"
-            />
-            {/* Fuse flame */}
-            <ellipse
-              cx="50"
-              cy="12"
-              rx="6"
-              ry="8"
-              fill="#FF4500"
-              opacity="0.8"
-            />
-            <defs>
-              <radialGradient id="bombGradient" cx="30%" cy="30%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.3" />
-                <stop offset="100%" stopColor={mineColor} stopOpacity="1" />
-              </radialGradient>
-              <radialGradient id="bombHighlight" cx="30%" cy="30%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.6" />
-                <stop offset="100%" stopColor={mineColor} stopOpacity="0.8" />
-              </radialGradient>
-            </defs>
-          </svg>
+          <MineSVG
+            style={{
+              width: '100%',
+              height: '100%',
+              filter: `drop-shadow(0 0 8px ${mineColor}44)`
+            }}
+          />
         )
 
       case 'flag':
         return (
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 100 100"
-            style={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))' }}
-          >
-            {/* Flag pole */}
-            <rect
-              x="48"
-              y="20"
-              width="4"
-              height="60"
-              fill="#cccccc"
-              rx="2"
-            />
-            {/* Flag pole highlight */}
-            <rect
-              x="48.5"
-              y="20"
-              width="1"
-              height="60"
-              fill="#ffffff"
-              opacity="0.3"
-            />
-            {/* Flag */}
-            <path
-              d="M52 25 L85 30 L80 50 L85 70 L52 75 Z"
-              fill={`url(#flagGradient)`}
-              stroke={flagColor}
-              strokeWidth="1"
-            />
-            {/* Flag pattern */}
-            <rect
-              x="55"
-              y="30"
-              width="25"
-              height="3"
-              fill="#ffffff"
-              opacity="0.3"
-            />
-            <rect
-              x="55"
-              y="40"
-              width="25"
-              height="3"
-              fill="#ffffff"
-              opacity="0.3"
-            />
-            <rect
-              x="55"
-              y="50"
-              width="25"
-              height="3"
-              fill="#ffffff"
-              opacity="0.3"
-            />
-            <rect
-              x="55"
-              y="60"
-              width="25"
-              height="3"
-              fill="#ffffff"
-              opacity="0.3"
-            />
-            <defs>
-              <linearGradient id="flagGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor={flagColor} stopOpacity="1" />
-                <stop offset="100%" stopColor={`${flagColor}dd`} stopOpacity="1" />
-              </linearGradient>
-            </defs>
-          </svg>
+          <FlagSVG
+            style={{
+              width: '100%',
+              height: '100%',
+              filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))'
+            }}
+          />
         )
 
       case 'number':

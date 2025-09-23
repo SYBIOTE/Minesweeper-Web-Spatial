@@ -1,7 +1,7 @@
 
 
 import { defaultConfig, type GameConfig } from './AppConfig'
-import { GameStartScene } from './components/GameStartScene'
+import { GameStartScene } from './pages/GameStartScene'
 
 export const App = () => {
   const isSpatial = navigator.userAgent.includes("WebSpatial") || import.meta.env.XR_ENV === "avp"
@@ -24,12 +24,6 @@ export const App = () => {
                 width: 1200,
                 height: 800
               },
-              // Position the new scene to the side of the current scene
-              position: {
-                x: 1500, // Move to the right
-                y: 0,
-                z: 0
-              }
             }
           })
 

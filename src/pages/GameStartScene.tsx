@@ -235,7 +235,7 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({
               : '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.3)'
           } as React.CSSProperties}
         >
-          🚀 Start 3D Adventure
+          Start Game
         </button>
 
         {/* Spatial Environment Indicator */}
