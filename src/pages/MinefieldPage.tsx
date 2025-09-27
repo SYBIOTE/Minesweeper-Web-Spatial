@@ -192,11 +192,12 @@ export const MinefieldPage: React.FC = () => {
 
       {/* Game UI Header */}
       <div
-        className="z-10 flex justify-between items-center p-4 border-b-4 border-white shadow-[4px_4px_0_rgba(0,0,0,0.6)] bg-black/80 uppercase tracking-wide"
+        className="z-10 flex justify-between items-center p-4 border-b-4 border-white shadow-[4px_4px_0_rgba(0,0,0,0.6)] bg-black uppercase tracking-wide"
         style={{
           '--xr-background-material': isSpatial ? 'thin' : 'none',
           '--xr-back': 10,
           '--xr-elevation': '0.1',
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
           enableXr: true,
           background: isSpatial ? 'transparent' : 'rgba(0, 0, 0, 0.85)'
         } as React.CSSProperties}
