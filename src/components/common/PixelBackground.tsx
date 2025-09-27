@@ -10,7 +10,7 @@ export const PixelBackground: React.FC<PixelBackgroundProps> = ({ isVisible = tr
   }
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
       <div
         className="absolute top-5 right-5 animate-pulse"
         style={{
