@@ -146,7 +146,7 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({
           </div>
 
           {/* Selected Difficulty Stats */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center break-words">
             <div
               className="p-2 sm:p-3 border border-cyan-400"
               style={{
@@ -198,7 +198,7 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({
                   {difficultyIcons[selectedDifficulty as keyof typeof difficultyIcons]}
                 </span>
               </div>
-              <div className="text-xs text-gray-400 uppercase break-words text-center">{selectedDifficulty}</div>
+              <div className="text-xs text-gray-400 uppercase text-center">{selectedDifficulty}</div>
             </div>
           </div>
         </div>
