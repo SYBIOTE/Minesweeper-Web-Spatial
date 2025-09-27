@@ -56,7 +56,7 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({
       {!isSpatial && <PixelBackground />}
 
       {/* Main Content - No Scrolling */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full max-w-6xl w-1/3 mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-4">
+      <div className="relative z-10 flex flex-col items-center justify-center h-full max-w-6xl w-100 mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-4">
         {/* Title Section */}
         <div
           className="text-center mb-2 sm:mb-3 lg:mb-4 p-2 border-2 border-white"
