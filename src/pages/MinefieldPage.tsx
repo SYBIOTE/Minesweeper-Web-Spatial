@@ -2,190 +2,47 @@ import React, { useState, useEffect } from 'react'
 import { Volume3D } from '../components/Volume3D'
 import { GameController } from '../components/GameController'
 import { defaultConfig, getConfigForEnvironment, type GameConfig } from '../AppConfig'
+import { FlagIcon as PixelFlagIcon } from '../assets/svgs/Pixels/FlagIcon'
+import { BombIcon } from '../assets/svgs/Pixels/BombIcon'
+import { NumberIcon } from '../assets/svgs/Pixels/NumberIcon'
 
-// Game end celebration component (handles both win and lose)
 const GameEndCelebration: React.FC<{ isSpatial: boolean; isWin: boolean; countdown: number }> = ({ isSpatial, isWin, countdown }) => {
-  const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; color: string; delay: number }>>([])
-
-  useEffect(() => {
-    // Generate particles based on win/lose status
-    if (isWin) {
-      // Victory confetti - bright colorful particles
-      const newParticles = Array.from({ length: 50 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        color: ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8'][i % 8],
-        delay: Math.random() * 3
-      }))
-      setParticles(newParticles)
-    } else {
-      // Defeat particles - darker, more ominous colors
-      const newParticles = Array.from({ length: 30 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        color: ['#FF4444', '#8B0000', '#4A4A4A', '#2F2F2F', '#1A1A1A', '#FF6B6B'][i % 6],
-        delay: Math.random() * 2
-      }))
-      setParticles(newParticles)
-    }
-  }, [isWin])
-
   return (
     <div
-      className="absolute inset-0 pointer-events-none overflow-hidden flex flex-col items-center justify-center"
+      className="absolute inset-0 flex items-center justify-center"
       style={{
         '--xr-elevation': isSpatial ? '0.9' : '10',
         enableXr: true,
-        zIndex: isSpatial ? undefined : 9999
+        background: isWin
+          ? 'linear-gradient(135deg, rgba(34,197,94,0.85), rgba(13,148,136,0.85))'
+          : 'linear-gradient(135deg, rgba(239,68,68,0.85), rgba(55,65,81,0.85))',
+        zIndex: isSpatial ? undefined : 9999,
+        imageRendering: 'pixelated'
       } as React.CSSProperties}
     >
-      {/* Particles - different colors based on win/lose */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {particles.map((particle) => (
-          <div
-            key={particle.id}
-            className="absolute w-3 h-3 rounded-full animate-pulse"
-            style={{
-              left: `${particle.x}%`,
-              top: `${particle.y}%`,
-              backgroundColor: particle.color,
-              animationDelay: `${particle.delay}s`,
-              animation: 'confetti 3s ease-in-out infinite',
-              '--xr-elevation': '0.1',
-              enableXr: true,
-              boxShadow: isSpatial ? `0 0 10px ${particle.color}` : `0 0 5px ${particle.color}`
-            } as React.CSSProperties}
-          />
-        ))}
+      <div className="pointer-events-auto flex flex-col items-center gap-4 px-6 py-8 border-4 border-white bg-black/70 shadow-[4px_4px_0_rgba(0,0,0,0.7)]">
+        <div className="w-16 h-16 animate-bounce">
+          {isWin ? <PixelFlagIcon className="w-full h-full" /> : <BombIcon className="w-full h-full" />}
+        </div>
+
+        <div className="text-center uppercase tracking-wider text-white" style={{ fontFamily: '"Press Start 2P", "Courier New", monospace' }}>
+          <p className="text-xl sm:text-2xl font-bold drop-shadow-[2px_2px_0_rgba(0,0,0,0.7)]">
+            {isWin ? 'Mission Cleared' : 'Mine Triggered'}
+          </p>
+          <p className="mt-3 text-xs text-gray-200">
+            {isWin ? 'All mines flagged. Sector secure.' : 'Explosion detected. Sector lost.'}
+          </p>
+        </div>
+
+        <div className="flex flex-col items-center gap-2">
+          <NumberIcon value={isWin ? 0 : 8} className="w-10 h-10" />
+          {countdown > 0 && (
+            <p className="text-xs uppercase text-cyan-300" style={{ fontFamily: '"Press Start 2P", "Courier New", monospace' }}>
+              returning in {countdown}
+            </p>
+          )}
+        </div>
       </div>
-
-      {/* Victory elements (only for wins) */}
-      {isWin && (
-        <>
-          {/* Main celebration container - centered with flex */}
-          <div className="flex flex-col items-center justify-center w-full h-full">
-            {/* Victory text - centered */}
-            <div className="text-center animate-bounce mb-8">
-              <div className="text-6xl font-black text-yellow-400 drop-shadow-2xl animate-pulse">
-                🎉 VICTORY! 🎉
-              </div>
-              <div className="text-2xl font-bold text-white mt-4 animate-pulse">
-                You are a 3D Minesweeper Master!
-              </div>
-              {countdown > 0 && (
-                <div className="text-lg font-bold text-cyan-400 mt-4 animate-pulse">
-                  Returning to menu in {countdown}...
-                </div>
-              )}
-            </div>
-
-            {/* Celebration effects positioned around the text */}
-            <div className="relative w-full h-96">
-              {/* Corner celebrations */}
-              <div className="absolute top-0 left-0 text-6xl animate-spin-slow">🎊</div>
-              <div className="absolute top-0 right-0 text-6xl animate-spin-slow animation-delay-1000">🎈</div>
-              <div className="absolute bottom-0 left-0 text-6xl animate-spin-slow animation-delay-2000">✨</div>
-              <div className="absolute bottom-0 right-0 text-6xl animate-spin-slow animation-delay-3000">🌟</div>
-
-              {/* Edge celebrations */}
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 text-5xl animate-bounce animation-delay-500">⭐</div>
-              <div className="absolute top-0 right-1/4 text-5xl animate-bounce animation-delay-1500">🎉</div>
-              <div className="absolute bottom-0 left-1/4 text-5xl animate-bounce animation-delay-2500">🎊</div>
-              <div className="absolute bottom-0 right-1/4 text-5xl animate-bounce animation-delay-3500">🏆</div>
-
-              {/* Fireworks */}
-              <div className="absolute top-1/4 left-1/4 w-8 h-8 animate-ping">
-                <div className="w-full h-full bg-yellow-400 rounded-full opacity-75 animate-pulse" />
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-orange-400 rounded-full opacity-90 animate-pulse" />
-              </div>
-
-              <div className="absolute top-1/4 right-1/4 w-6 h-6 animate-ping">
-                <div className="w-full h-full bg-pink-400 rounded-full opacity-75 animate-pulse" />
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-purple-400 rounded-full opacity-90 animate-pulse" />
-              </div>
-
-              <div className="absolute bottom-1/4 left-1/2 transform -translate-x-1/2 w-10 h-10 animate-ping">
-                <div className="w-full h-full bg-cyan-400 rounded-full opacity-75 animate-pulse" />
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-5 h-5 bg-blue-400 rounded-full opacity-90 animate-pulse" />
-              </div>
-
-              {/* Central celebration */}
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-8xl animate-bounce">🎆</div>
-
-              {/* Celebration sparkles */}
-              <div className="absolute top-1/4 left-1/6 text-4xl animate-spin-slow">✨</div>
-              <div className="absolute top-1/4 right-1/6 text-4xl animate-spin-slow animation-delay-1000">⭐</div>
-              <div className="absolute bottom-1/4 left-1/6 text-4xl animate-spin-slow animation-delay-2000">🌟</div>
-              <div className="absolute bottom-1/4 right-1/6 text-4xl animate-spin-slow animation-delay-3000">🎊</div>
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* Defeat elements (only for losses) */}
-      {!isWin && (
-        <>
-          {/* Main defeat container - centered with flex */}
-          <div className="flex flex-col items-center justify-center w-full h-full">
-            {/* Defeat text - centered */}
-            <div className="text-center animate-bounce mb-8">
-              <div className="text-6xl font-black text-red-500 drop-shadow-2xl animate-shake">
-                💥 BOOM! 💥
-              </div>
-              <div className="text-2xl font-bold text-white mt-4 animate-pulse">
-                Mine exploded! Try again!
-              </div>
-              {countdown > 0 && (
-                <div className="text-lg font-bold text-orange-400 mt-4 animate-pulse">
-                  Returning to menu in {countdown}...
-                </div>
-              )}
-            </div>
-
-            {/* Defeat effects positioned around the text */}
-            <div className="relative w-full h-96">
-              {/* Corner defeat elements */}
-              <div className="absolute top-0 left-0 text-6xl animate-spin-slow">💣</div>
-              <div className="absolute top-0 right-0 text-6xl animate-spin-slow animation-delay-1000">☠️</div>
-              <div className="absolute bottom-0 left-0 text-6xl animate-spin-slow animation-delay-2000">🔥</div>
-              <div className="absolute bottom-0 right-0 text-6xl animate-spin-slow animation-delay-3000">💀</div>
-
-              {/* Edge defeat elements */}
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 text-5xl animate-bounce animation-delay-500">💥</div>
-              <div className="absolute top-0 right-1/4 text-5xl animate-bounce animation-delay-1500">☠️</div>
-              <div className="absolute bottom-0 left-1/4 text-5xl animate-bounce animation-delay-2500">🔥</div>
-              <div className="absolute bottom-0 right-1/4 text-5xl animate-bounce animation-delay-3500">💀</div>
-
-              {/* Explosion effects */}
-              <div className="absolute top-1/4 left-1/4 w-8 h-8 animate-ping">
-                <div className="w-full h-full bg-red-600 rounded-full opacity-75 animate-pulse" />
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-red-800 rounded-full opacity-90 animate-pulse" />
-              </div>
-
-              <div className="absolute top-1/4 right-1/4 w-6 h-6 animate-ping">
-                <div className="w-full h-full bg-orange-600 rounded-full opacity-75 animate-pulse" />
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-red-700 rounded-full opacity-90 animate-pulse" />
-              </div>
-
-              <div className="absolute bottom-1/4 left-1/2 transform -translate-x-1/2 w-10 h-10 animate-ping">
-                <div className="w-full h-full bg-gray-800 rounded-full opacity-75 animate-pulse" />
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-5 h-5 bg-black rounded-full opacity-90 animate-pulse" />
-              </div>
-
-              {/* Central explosion */}
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-8xl animate-shake">💥</div>
-
-              {/* Defeat smoke/ash */}
-              <div className="absolute top-1/4 left-1/6 text-4xl animate-spin-slow">💨</div>
-              <div className="absolute top-1/4 right-1/6 text-4xl animate-spin-slow animation-delay-1000">☁️</div>
-              <div className="absolute bottom-1/4 left-1/6 text-4xl animate-spin-slow animation-delay-2000">🌫️</div>
-              <div className="absolute bottom-1/4 right-1/6 text-4xl animate-spin-slow animation-delay-3000">⚫</div>
-            </div>
-          </div>
-        </>
-      )}
     </div>
   )
 }
@@ -231,44 +88,50 @@ export const MinefieldPage: React.FC = () => {
     onGameEnd: (won, stats) => {
       setGameStats(stats)
       setIsWin(won)
-      setShowCelebration(true)
 
-      if (won) {
-        // For wins, show celebration for 6 seconds total
-        setCountdown(6)
-        let count = 6
-        const countdownInterval = setInterval(() => {
-          count--
-          setCountdown(count)
-          if (count <= 0) {
-            clearInterval(countdownInterval)
-            setShowCelebration(false)
-            setCountdown(0)
-            // Extra delay to let celebration fade out
-            setTimeout(() => {
+      const startCelebration = () => {
+        setShowCelebration(true)
+
+        if (won) {
+          // For wins, show celebration for 6 seconds total
+          setCountdown(6)
+          let count = 6
+          const countdownInterval = setInterval(() => {
+            count--
+            setCountdown(count)
+            if (count <= 0) {
+              clearInterval(countdownInterval)
+              setShowCelebration(false)
+              setCountdown(0)
+              // Extra delay to let celebration fade out
+              setTimeout(() => {
+                if (typeof window !== 'undefined' && window.opener) {
+                  window.close()
+                }
+              }, 1000)
+            }
+          }, 1000)
+        } else {
+          // For losses, show celebration for 3 seconds, then close
+          setCountdown(3)
+          let count = 3
+          const countdownInterval = setInterval(() => {
+            count--
+            setCountdown(count)
+            if (count <= 0) {
+              clearInterval(countdownInterval)
+              setShowCelebration(false)
+              setCountdown(0)
               if (typeof window !== 'undefined' && window.opener) {
                 window.close()
               }
-            }, 1000)
-          }
-        }, 1000)
-      } else {
-        // For losses, show celebration for 3 seconds, then close
-        setCountdown(3)
-        let count = 3
-        const countdownInterval = setInterval(() => {
-          count--
-          setCountdown(count)
-          if (count <= 0) {
-            clearInterval(countdownInterval)
-            setShowCelebration(false)
-            setCountdown(0)
-            if (typeof window !== 'undefined' && window.opener) {
-              window.close()
             }
-          }
-        }, 1000)
+          }, 1000)
+        }
       }
+
+      setTimeout(startCelebration, 2000)
+
       console.log(won ? 'You won!' : 'Game Over!', stats)
     }
   })
@@ -312,35 +175,112 @@ export const MinefieldPage: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden text-white font-inter font-normal leading-relaxed">
+    <div
+      className={`flex flex-col h-screen w-screen overflow-hidden text-white leading-relaxed ${
+        isSpatial 
+          ? 'bg-transparent' 
+          : 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'
+      }`}
+      style={{
+        fontFamily: '"Press Start 2P", "Courier New", monospace',
+        imageRendering: 'pixelated'
+      }}
+    >
+            {!isSpatial && (
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Blue Pixel Crystal - Top Right */}
+        <div className="absolute top-5 right-5 animate-pulse"
+             style={{
+               width: '64px',
+               height: '64px',
+               background: `
+                 conic-gradient(from 0deg at 50% 50%, 
+                   #3b82f6 0deg 45deg,
+                   #1d4ed8 45deg 90deg,
+                   #1e40af 90deg 135deg,
+                   #1e3a8a 135deg 180deg,
+                   #3b82f6 180deg 225deg,
+                   #1d4ed8 225deg 270deg,
+                   #1e40af 270deg 315deg,
+                   #1e3a8a 315deg 360deg
+                 )`,
+               imageRendering: 'pixelated',
+               border: '2px solid rgba(59, 130, 246, 0.8)',
+               boxShadow: '4px 4px 0px rgba(0, 0, 0, 0.5), 2px 2px 0px rgba(59, 130, 246, 0.6)'
+             }}>
+          <div className="absolute inset-2 border border-blue-300/50" 
+               style={{ 
+                 background: 'linear-gradient(45deg, rgba(59, 130, 246, 0.4) 25%, transparent 25%, transparent 75%, rgba(59, 130, 246, 0.4) 75%)',
+                 backgroundSize: '8px 8px'
+               }}></div>
+        </div>
+
+        {/* Pink Pixel Gem - Bottom Left */}
+        <div className="absolute bottom-5 left-5 animate-pulse animation-delay-1000"
+             style={{
+               width: '48px',
+               height: '48px',
+               background: `
+                 linear-gradient(0deg, #ec4899 0%, #be185d 50%, #ec4899 100%),
+                 linear-gradient(90deg, #f97316 0%, #ea580c 50%, #f97316 100%)`,
+               backgroundBlendMode: 'multiply',
+               imageRendering: 'pixelated',
+               border: '2px solid rgba(236, 72, 153, 0.8)',
+               clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
+               boxShadow: '3px 3px 0px rgba(0, 0, 0, 0.6), 1px 1px 0px rgba(236, 72, 153, 0.7)'
+             }}>
+        </div>
+
+        {/* Additional Small Pixel Details */}
+        <div className="absolute top-20 left-10 w-4 h-4 bg-cyan-400 animate-pulse animation-delay-500 border border-cyan-300"
+             style={{ 
+               imageRendering: 'pixelated',
+               boxShadow: '2px 2px 0px rgba(0, 0, 0, 0.4)'
+             }}></div>
+        <div className="absolute bottom-20 right-20 w-6 h-6 bg-yellow-400 animate-pulse animation-delay-1500 border border-yellow-300"
+             style={{ 
+               imageRendering: 'pixelated',
+               clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)',
+               boxShadow: '2px 2px 0px rgba(0, 0, 0, 0.4)'
+             }}></div>
+        <div className="absolute top-1/3 right-10 w-3 h-3 bg-green-400 animate-pulse animation-delay-800 border border-green-300"
+             style={{ 
+               imageRendering: 'pixelated',
+               boxShadow: '1px 1px 0px rgba(0, 0, 0, 0.4)'
+             }}></div>
+      </div>)}
       {/* Game UI Header */}
       <div
-        className="flex justify-between items-center p-4"
+        className="flex justify-between items-center p-4 border-b-4 border-white shadow-[4px_4px_0_rgba(0,0,0,0.6)] bg-black/80 uppercase tracking-wide"
         style={{
           '--xr-background-material': isSpatial ? 'thin' : 'none',
           '--xr-back': 10,
           '--xr-elevation': '0.1',
           enableXr: true,
-          background: isSpatial ? 'transparent' : 'rgba(0, 0, 0, 0.5)'
+          background: isSpatial ? 'transparent' : 'rgba(0, 0, 0, 0.85)'
         } as React.CSSProperties}
       >
-        <div className="flex items-center space-x-4">
-          <h1 className="text-xl font-bold">3D Minesweeper</h1>
-          <div className="text-sm">
-            Mines: {gameStats?.remainingMines || gameConfig.mines.count}
+        <div className="flex items-center space-x-6 text-xs">
+          <h1 className="text-base sm:text-lg font-bold text-white drop-shadow-[2px_2px_0_rgba(0,0,0,0.6)]">
+            3D MINESWEEPER
+          </h1>
+          <div className="flex items-center gap-2 text-cyan-300">
+            <PixelFlagIcon className="w-4 h-4" />
+            <span>Mines {gameStats?.remainingMines ?? gameConfig.mines.count}</span>
           </div>
-          <div className="text-sm">
-            Progress: {gameStats?.progress || 0}%
+          <div className="flex items-center gap-2 text-yellow-200">
+            <NumberIcon className="w-4 h-4" value={Math.min(8, Math.max(1, Math.round((gameStats?.progress || 0) / 12) || 1))} />
+            <span>Progress {(gameStats?.progress || 0).toFixed(0)}%</span>
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3 text-xs">
           <button
             onClick={gameControls.toggleFlagMode}
-            className={`px-3 py-1 rounded text-sm ${
+            className={`px-3 py-1 border-2 border-white shadow-[2px_2px_0_rgba(0,0,0,0.6)] ${
               gameControls.flagMode
-                ? 'bg-yellow-600 text-white'
-                : 'bg-gray-600 text-gray-200'
+                ? 'bg-yellow-500 text-black'
+                : 'bg-gray-700 text-gray-200'
             }`}
             style={{
               '--xr-background-material': 'thin',
@@ -353,7 +293,7 @@ export const MinefieldPage: React.FC = () => {
 
           <button
             onClick={handleResetGame}
-            className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+            className="px-3 py-1 border-2 border-white bg-red-600 text-white shadow-[2px_2px_0_rgba(0,0,0,0.6)] hover:bg-red-700"
             style={{
               '--xr-background-material': 'thin',
               '--xr-back': 5,
@@ -365,7 +305,7 @@ export const MinefieldPage: React.FC = () => {
 
           <button
             onClick={handleExitGame}
-            className="px-3 py-1 bg-gray-600 text-white rounded text-sm hover:bg-gray-700"
+            className="px-3 py-1 border-2 border-white bg-gray-700 text-white shadow-[2px_2px_0_rgba(0,0,0,0.6)] hover:bg-gray-800"
             style={{
               '--xr-background-material': 'thin',
               '--xr-back': 5,
@@ -380,18 +320,18 @@ export const MinefieldPage: React.FC = () => {
       {/* Game Status */}
       {gameControls.isGameOver && (
         <div
-          className={`text-center py-2 text-lg font-bold ${
-            gameControls.isWon ? 'text-green-400' : 'text-red-400'
+          className={`text-center py-3 text-sm font-bold uppercase tracking-wide border-b-4 ${
+            gameControls.isWon ? 'border-green-400 text-green-300' : 'border-red-500 text-red-300'
           }`}
           style={{
             '--xr-background-material': isSpatial ? 'thin' : 'none',
             '--xr-back': 10,
             '--xr-elevation': '0.05',
             enableXr: true,
-            background: isSpatial ? 'transparent' : 'rgba(0, 0, 0, 0.3)'
+            background: isSpatial ? 'transparent' : 'rgba(0, 0, 0, 0.75)'
           } as React.CSSProperties}
         >
-          {gameControls.isWon ? '🎉 You Won! 🎉' : '💥 Game Over! 💥'}
+          {gameControls.isWon ? 'VICTORY SECURED' : 'MINE DETONATED'}
         </div>
       )}
 

@@ -1,5 +1,15 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { type GameConfig, getPresetForEnvironment, getConfigForEnvironment } from '../AppConfig'
+import { BeginnerIcon, IntermediateIcon, ExpertIcon } from '../assets/svgs/Pixels/DifficultyIcons'
+import { TargetIcon } from '../assets/svgs/Pixels/TargetIcon'
+import { BombIcon } from '../assets/svgs/Pixels/BombIcon'
+import { FlagIcon as PixelFlagIcon } from '../assets/svgs/Pixels/FlagIcon'
+import { NumberIcon } from '../assets/svgs/Pixels/NumberIcon'
+import { MouseCursorIcon } from '../assets/svgs/Pixels/MouseCursorIcon'
+import { MiniFlagIcon } from '../assets/svgs/Pixels/MiniFlagIcon'
+import { ArrowKeysIcon } from '../assets/svgs/Pixels/ArrowKeysIcon'
+import { MiniMineIcon } from '../assets/svgs/Pixels/MiniMineIcon'
+import { PixelBackground } from '../components/common/PixelBackground'
 
 interface GameStartSceneProps {
   config: GameConfig
@@ -19,101 +29,116 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({
 
   const difficultyLevels: (keyof GameConfig['difficulty']['preset'])[] = ['beginner', 'intermediate', 'expert']
 
-  const getDifficultyColor = (level: string) => {
-    switch (level) {
-      case 'beginner': return 'from-green-500 to-green-600'
-      case 'intermediate': return 'from-yellow-500 to-yellow-600'
-      case 'expert': return 'from-red-500 to-red-600'
-      default: return 'from-gray-500 to-gray-600'
-    }
-  }
 
-  const getDifficultyIcon = (level: string) => {
-    switch (level) {
-      case 'beginner': return '🟢'
-      case 'intermediate': return '🟡'
-      case 'expert': return '🔴'
-      default: return '⚪'
-    }
-  }
+  const difficultyIcons = useMemo(() => ({
+    beginner: <BeginnerIcon />,
+    intermediate: <IntermediateIcon />,
+    expert: <ExpertIcon />
+  }), [])
 
   return (
     <div
-      className="flex flex-col items-center justify-center h-full w-full text-white relative overflow-hidden"
+      className={`h-full w-full text-white overflow-hidden ${
+        isSpatial 
+          ? 'bg-transparent' 
+          : 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'
+      }`}
       style={{
         '--xr-background-material': isSpatial ? 'thick' : 'none',
         '--xr-back': 20,
         '--xr-elevation': '0.3',
-        enableXr: true
+        enableXr: true,
+        fontFamily: '"Press Start 2P", "Courier New", monospace',
+        imageRendering: 'pixelated'
       } as React.CSSProperties}
     >
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-pink-500/20 to-cyan-500/20 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl animate-pulse animation-delay-2000"></div>
-      </div>
+      {/* Pixel Art Background Elements */}
+      {!isSpatial && <PixelBackground />}
 
-      {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center max-w-4xl w-full px-8">
+      {/* Main Content - No Scrolling */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full max-w-6xl w-1/3 mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-4">
         {/* Title Section */}
         <div
-          className="text-center mb-12"
+          className="text-center mb-2 sm:mb-3 lg:mb-4 p-2 border-2 border-white"
           style={{
             '--xr-background-material': isSpatial ? 'thin' : 'none',
             '--xr-back': 10,
             '--xr-elevation': '0.15',
-            enableXr: true
+            enableXr: true,
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            boxShadow: '4px 4px 0px rgba(0, 0, 0, 0.5), 2px 2px 0px rgba(255, 255, 255, 0.2)'
           } as React.CSSProperties}
         >
-          <h1 className="text-8xl font-black mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 drop-shadow-2xl">
-            3D Minesweeper
+          <h1 className="text-xl sm:text-3xl lg:text-5xl font-bold mb-1 sm:mb-2 text-white tracking-wider uppercase"
+              style={{
+                textShadow: '2px 2px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000',
+                letterSpacing: '0.1em'
+              }}>
+            3D MINESWEEPER
           </h1>
-          <p className="text-2xl text-gray-300 font-light tracking-wide">
-            Navigate through <span className="text-cyan-400 font-semibold">3D space</span> to find hidden mines
+          <p className="text-xs sm:text-sm lg:text-base text-gray-300 tracking-wide px-4 uppercase"
+             style={{ letterSpacing: '0.05em' }}>
+            Navigate through <span className="text-cyan-400 font-bold">3D SPACE</span> to find hidden mines
           </p>
-          <div className="mt-4 flex justify-center space-x-2 text-3xl">
-            <span className="animate-bounce">💣</span>
-            <span className="animate-bounce animation-delay-200">⚡</span>
-            <span className="animate-bounce animation-delay-400">🎮</span>
+          <div className="mt-1 sm:mt-2 flex justify-center space-x-3 items-center">
+            <div className="animate-bounce w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8">
+              <BombIcon className="w-full h-full" />
+            </div>
+
+            <div className="animate-bounce animation-delay-200 w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8">
+              <PixelFlagIcon className="w-full h-full" />
+            </div>
+
+            <div className="animate-bounce animation-delay-400 w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8">
+              <NumberIcon value={3} className="w-full h-full" />
+            </div>
           </div>
         </div>
 
         {/* Difficulty Selector */}
         <div
-          className="mb-8 p-8 rounded-2xl backdrop-blur-md shadow-2xl"
+          className="mb-2 sm:mb-3 lg:mb-4 p-2 sm:p-3 lg:p-4 border-2 border-gray-400 w-full max-w-3xl"
           style={{
             '--xr-background-material': isSpatial ? 'thin' : 'none',
             '--xr-back': 15,
             '--xr-elevation': '0.1',
             enableXr: true,
-            background: isSpatial ? 'transparent' : 'rgba(0, 0, 0, 0.4)',
-            border: isSpatial ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 255, 255, 0.2)'
+            background: isSpatial ? 'rgba(0, 0, 0, 0.9)' : 'rgba(0, 0, 0, 0.9)',
+            boxShadow: '3px 3px 0px rgba(0, 0, 0, 0.7), 1px 1px 0px rgba(255, 255, 255, 0.3)'
           } as React.CSSProperties}
         >
-          <h2 className="text-3xl font-bold mb-6 text-center">Choose Your Challenge</h2>
+          <h2 className="text-base sm:text-lg lg:text-xl font-bold mb-2 sm:mb-3 text-center uppercase tracking-wide"
+              style={{
+                textShadow: '1px 1px 0px #000',
+                letterSpacing: '0.1em'
+              }}>CHOOSE YOUR CHALLENGE</h2>
 
-          <div className="flex justify-center mb-8">
-            <div className="relative">
+          <div className="flex justify-center mb-2 sm:mb-3">
+            <div className="relative w-full max-w-xs">
               <select
                 value={selectedDifficulty}
                 onChange={(e) => setSelectedDifficulty(e.target.value as keyof GameConfig['difficulty']['preset'])}
-                className={`appearance-none bg-gradient-to-r ${getDifficultyColor(selectedDifficulty)} text-white text-xl font-bold px-8 py-4 pr-12 rounded-xl cursor-pointer transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white/30`}
+                className={`appearance-none text-white text-sm sm:text-base lg:text-lg font-bold px-3 sm:px-4 lg:px-6 py-1 sm:py-2 lg:py-3 pr-6 sm:pr-8 lg:pr-10 cursor-pointer border-2 border-white w-full uppercase tracking-wide`}
                 style={{
                   '--xr-background-material': 'thick',
                   '--xr-back': 8,
                   '--xr-elevation': '0.05',
-                  enableXr: true
+                  enableXr: true,
+                  backgroundColor: selectedDifficulty === 'beginner' ? '#22c55e' : 
+                                 selectedDifficulty === 'intermediate' ? '#eab308' : '#ef4444',
+                  boxShadow: '2px 2px 0px rgba(0, 0, 0, 0.8), inset -1px -1px 0px rgba(0, 0, 0, 0.3)',
+                  transition: 'none',
+                  letterSpacing: '0.05em'
                 } as React.CSSProperties}
               >
                 {difficultyLevels.map((level) => (
                   <option key={level} value={level} className="bg-gray-800 text-white">
-                    {getDifficultyIcon(level)} {level.charAt(0).toUpperCase() + level.slice(1)}
+                    {level.charAt(0).toUpperCase() + level.slice(1)}
                   </option>
                 ))}
               </select>
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
@@ -121,101 +146,111 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({
           </div>
 
           {/* Selected Difficulty Stats */}
-          <div className="grid grid-cols-3 gap-6 text-center">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
             <div
-              className="p-4 rounded-xl"
+              className="p-2 sm:p-3 border border-cyan-400"
               style={{
                 '--xr-background-material': isSpatial ? 'thin' : 'none',
                 '--xr-back': 5,
                 '--xr-elevation': '0.03',
                 enableXr: true,
-                background: isSpatial ? 'transparent' : 'rgba(255, 255, 255, 0.05)'
+                background: 'rgba(0, 0, 0, 0.8)',
+                boxShadow: '2px 2px 0px rgba(0, 0, 0, 0.5), inset 1px 1px 0px rgba(255, 255, 255, 0.1)'
               } as React.CSSProperties}
             >
-              <div className="text-sm text-gray-400 mb-1">Grid Size</div>
-              <div className="text-2xl font-bold text-cyan-400">
+              <div className="text-xs text-gray-300 mb-1 uppercase tracking-wide">Grid Size</div>
+              <div className="text-sm sm:text-base text-cyan-400">
                 {currentPreset.width}×{currentPreset.height}×{currentPreset.depth}
               </div>
-              <div className="text-xs text-gray-500 mt-1">cells</div>
+              <div className="text-xs text-gray-400 uppercase">cells</div>
             </div>
             <div
-              className="p-4 rounded-xl"
+              className="p-2 sm:p-3 border border-red-400"
               style={{
                 '--xr-background-material': isSpatial ? 'thin' : 'none',
                 '--xr-back': 5,
                 '--xr-elevation': '0.03',
                 enableXr: true,
-                background: isSpatial ? 'transparent' : 'rgba(255, 255, 255, 0.05)'
+                background: 'rgba(0, 0, 0, 0.8)',
+                boxShadow: '2px 2px 0px rgba(0, 0, 0, 0.5), inset 1px 1px 0px rgba(255, 255, 255, 0.1)'
               } as React.CSSProperties}
             >
-              <div className="text-sm text-gray-400 mb-1">Mines</div>
-              <div className="text-2xl font-bold text-red-400">
+              <div className="text-xs text-gray-300 mb-1 uppercase tracking-wide">Mines</div>
+              <div className="text-sm sm:text-base text-red-400">
                 {currentConfig.mines.count}
               </div>
-              <div className="text-xs text-gray-500 mt-1">hidden dangers</div>
+              <div className="text-xs text-gray-400 uppercase">dangers</div>
             </div>
             <div
-              className="p-4 rounded-xl"
+              className="p-2 sm:p-3 border border-yellow-400"
               style={{
                 '--xr-background-material': isSpatial ? 'thin' : 'none',
                 '--xr-back': 5,
                 '--xr-elevation': '0.03',
                 enableXr: true,
-                background: isSpatial ? 'transparent' : 'rgba(255, 255, 255, 0.05)'
+                background: 'rgba(0, 0, 0, 0.8)',
+                boxShadow: '2px 2px 0px rgba(0, 0, 0, 0.5), inset 1px 1px 0px rgba(255, 255, 255, 0.1)'
               } as React.CSSProperties}
             >
-              <div className="text-sm text-gray-400 mb-1">Difficulty</div>
-              <div className="text-2xl font-bold text-yellow-400">
-                {getDifficultyIcon(selectedDifficulty)}
+              <div className="text-xs text-gray-300 mb-1 uppercase tracking-wide">Level</div>
+              <div className="flex justify-center">
+                <span className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8">
+                  {difficultyIcons[selectedDifficulty as keyof typeof difficultyIcons]}
+                </span>
               </div>
-              <div className="text-xs text-gray-500 mt-1 capitalize">{selectedDifficulty}</div>
+              <div className="text-xs text-gray-400 uppercase break-words text-center">{selectedDifficulty}</div>
             </div>
           </div>
         </div>
 
         {/* Enhanced Instructions */}
         <div
-          className="mb-10 p-6 rounded-xl backdrop-blur-md max-w-2xl"
+          className="mb-2 sm:mb-3 p-2 sm:p-3 border-2 border-white w-full max-w-lg"
           style={{
             '--xr-background-material': isSpatial ? 'thin' : 'none',
             '--xr-back': 15,
             '--xr-elevation': '0.08',
             enableXr: true,
-            background: isSpatial ? 'transparent' : 'rgba(0, 0, 0, 0.25)',
-            border: isSpatial ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
+            background: 'rgba(0, 0, 0, 0.9)',
+            boxShadow: '3px 3px 0px rgba(0, 0, 0, 0.7), 1px 1px 0px rgba(255, 255, 255, 0.2)'
           } as React.CSSProperties}
         >
-          <h3 className="text-xl font-bold mb-4 text-center flex items-center justify-center space-x-2">
-            <span>🎯</span>
-            <span>How to Play</span>
+          <h3 className="text-sm sm:text-base font-bold mb-2 text-center flex items-center justify-center space-x-1 uppercase tracking-wide"
+              style={{ textShadow: '1px 1px 0px #000' }}>
+            <TargetIcon className="w-4 h-4" />
+            <span>HOW TO PLAY</span>
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">👆</div>
+          <div className="grid grid-cols-2 gap-1 sm:gap-2">
+            <div className="flex items-center space-x-1 sm:space-x-2">
+              <div className="w-4 h-4 sm:w-5 sm:h-5">
+                <MouseCursorIcon className="w-full h-full" />
+              </div>
               <div>
-                <div className="font-semibold text-cyan-400">Left Click</div>
-                <div className="text-sm text-gray-300">Reveal cells</div>
+                <div className="text-xs font-bold text-cyan-400 uppercase tracking-wide">Left Click</div>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center">🚩</div>
+            <div className="flex items-center space-x-1 sm:space-x-2">
+              <div className="w-4 h-4 sm:w-5 sm:h-5">
+                <MiniFlagIcon className="w-full h-full" />
+              </div>
               <div>
-                <div className="font-semibold text-yellow-400">Right Click</div>
-                <div className="text-sm text-gray-300">Flag mines</div>
+                <div className="text-xs font-bold text-yellow-400 uppercase tracking-wide">Right Click</div>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">🧭</div>
+            <div className="flex items-center space-x-1 sm:space-x-2">
+              <div className="w-4 h-4 sm:w-5 sm:h-5">
+                <ArrowKeysIcon className="w-full h-full" />
+              </div>
               <div>
-                <div className="font-semibold text-green-400">Navigate</div>
-                <div className="text-sm text-gray-300">Explore 3D space</div>
+                <div className="text-xs font-bold text-green-400 uppercase tracking-wide">Navigate</div>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center">💥</div>
+            <div className="flex items-center space-x-1 sm:space-x-2">
+              <div className="w-4 h-4 sm:w-5 sm:h-5">
+                <MiniMineIcon className="w-full h-full" />
+              </div>
               <div>
-                <div className="font-semibold text-red-400">Avoid</div>
-                <div className="text-sm text-gray-300">Clicking on mines!</div>
+                <div className="text-xs font-bold text-red-400 uppercase tracking-wide">Avoid Mines</div>
               </div>
             </div>
           </div>
@@ -224,43 +259,50 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({
         {/* Start Button */}
         <button
           onClick={() => onStartGame(selectedDifficulty)}
-          className="px-12 py-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 rounded-2xl text-2xl font-black transition-all duration-300 transform hover:scale-110 hover:rotate-1 shadow-2xl"
+          className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-black border-2 border-white uppercase tracking-wider"
           style={{
             '--xr-background-material': 'thick',
             '--xr-back': 12,
             '--xr-elevation': '0.15',
             enableXr: true,
-            boxShadow: isSpatial
-              ? '0 12px 40px rgba(59, 130, 246, 0.4), 0 0 60px rgba(147, 51, 234, 0.3)'
-              : '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.3)'
+            background: 'linear-gradient(180deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%)',
+            boxShadow: '4px 4px 0px rgba(0, 0, 0, 0.8), 2px 2px 0px rgba(255, 255, 255, 0.3), inset -1px -1px 0px rgba(0, 0, 0, 0.3)',
+            textShadow: '1px 1px 0px #000',
+            transition: 'none'
           } as React.CSSProperties}
         >
-          Start Game
+          START GAME
         </button>
 
         {/* Spatial Environment Indicator */}
         {isSpatial && (
           <div
-            className="mt-6 text-lg text-cyan-400 font-semibold animate-pulse"
+            className="mt-2 sm:mt-3 text-xs sm:text-sm text-cyan-400 font-bold animate-pulse text-center px-4 uppercase tracking-wide border border-cyan-400 p-1"
             style={{
               '--xr-elevation': '0.05',
-              enableXr: true
+              enableXr: true,
+              background: 'rgba(0, 0, 0, 0.9)',
+              textShadow: '1px 1px 0px #000',
+              boxShadow: '2px 2px 0px rgba(0, 0, 0, 0.7)'
             } as React.CSSProperties}
           >
-            🕶️ Spatial Environment Detected - Ready for 3D Immersion!
+            🕶️ SPATIAL ENVIRONMENT DETECTED
           </div>
         )}
 
         {/* Spatial Scene Transition Hint */}
         {isSpatial && (
           <div
-            className="mt-4 text-sm text-blue-300 font-medium"
+            className="mt-1 sm:mt-2 text-xs text-blue-300 font-bold text-center px-4 uppercase tracking-wide border border-blue-300 p-1"
             style={{
               '--xr-elevation': '0.03',
-              enableXr: true
+              enableXr: true,
+              background: 'rgba(0, 0, 0, 0.9)',
+              textShadow: '1px 1px 0px #000',
+              boxShadow: '2px 2px 0px rgba(0, 0, 0, 0.7)'
             } as React.CSSProperties}
           >
-            🎮 Starting game will open in a new spatial scene
+            🎮 GAME OPENS IN NEW SPATIAL SCENE
           </div>
         )}
       </div>

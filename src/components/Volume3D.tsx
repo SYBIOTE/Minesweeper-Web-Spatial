@@ -76,23 +76,13 @@ const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
   // For 2D units, we don't need to limit active instances since they're lightweight
   // All cards are active by default (no performance concerns with CSS/SVG)
   
-  // Container style to center the grid in available space
-  const containerStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    height: '100%',
-    position: 'relative'
-  }
-
   Object.entries(layerData).map(([layerZ, positions]) => {
     console.log(`Layer Z: ${layerZ}, Cards: ${positions.length}`)
   })
   // Grid styling is now handled per layer for WebSpatial depth
 
    return (
-    <div style={containerStyle}>
+    <div className="relative flex h-full w-full items-center justify-center">
       {Object.entries(layerData).map(([layerZ, positions]) => {
         // Get the actual Z position from the first position in this layer
         const actualZPosition = positions[0]?.z || 0
@@ -101,19 +91,12 @@ const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
           <div
             enable-xr
             key={layerZ}
+            className="absolute inset-0 grid items-center justify-center"
             style={{
               '--xr-back': actualZPosition, // Use actual Z position converted to WebSpatial units
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              display: 'grid',
               gridTemplateColumns: `repeat(${gridWidth}, ${cardSize + cardSpacing}px)`,
               gridTemplateRows: `repeat(${gridHeight}, ${cardSize + cardSpacing}px)`,
               gap: `${cardSpacing}px`,
-              justifyContent: 'center',
-              alignItems: 'center'
             } as React.CSSProperties}
           >
           {positions.map(({ gridX, gridY, index }: { gridX: number; gridY: number; index: number }) => {
@@ -129,12 +112,10 @@ const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
             return (
               <div
                 key={index}
+                className="flex items-center justify-center"
                 style={{
                   gridColumn: gridX,
-                  gridRow: gridY,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center'
+                  gridRow: gridY
                 }}
               >
                 <MinesweeperUnit2D

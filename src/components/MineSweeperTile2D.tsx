@@ -1,8 +1,11 @@
 import { memo } from 'react'
 import type { GameConfig } from '../AppConfig'
 import defaultConfig from '../AppConfig'
-import MineSVG from '../assets/svgs/mine'
-import FlagSVG from '../assets/svgs/flag'
+import { BombIcon } from '../assets/svgs/Pixels/BombIcon'
+import { FlagIcon } from '../assets/svgs/Pixels/FlagIcon'
+import { NumberIcon } from '../assets/svgs/Pixels/NumberIcon'
+import { CellEmptyIcon } from '../assets/svgs/Pixels/CellEmptyIcon'
+import { CellRevealedIcon } from '../assets/svgs/Pixels/CellRevealedIcon'
 
 type MinesweeperTile2DProps = {
   size?: number
@@ -21,44 +24,21 @@ const MinesweeperTile2DComponent = ({ index, variant = 'empty', number, config =
 
   // Position-based logic removed - now handled by CSS Grid in parent component
 
-  const getCardStyle = () => {
-    const baseStyle: React.CSSProperties = {
-      width: `${size}px`,
-      height: `${size}px`,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: '8px',
-      border: '1px solid rgba(0, 0, 0, 0.1)',
-      background: `transparent`,
-      overflow: 'hidden'
-    }
-
-    return baseStyle
-  }
+  const getCardStyle = () => ({
+    width: `${size}px`,
+    height: `${size}px`
+  })
 
   const renderContent = () => {
     switch (variant) {
       case 'bomb':
         return (
-          <MineSVG
-            style={{
-              width: '100%',
-              height: '100%',
-              filter: `drop-shadow(0 0 8px ${mineColor}44)`
-            }}
-          />
+          <BombIcon className="w-full h-full" style={{ filter: `drop-shadow(0 0 8px ${mineColor}44)` }} />
         )
 
       case 'flag':
         return (
-          <FlagSVG
-            style={{
-              width: '100%',
-              height: '100%',
-              filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))'
-            }}
-          />
+          <FlagIcon className="w-full h-full" style={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))' }} />
         )
 
       case 'number':
@@ -66,96 +46,27 @@ const MinesweeperTile2DComponent = ({ index, variant = 'empty', number, config =
           const colorIndex = Math.max(0, Math.min(7, number - 1))
           const textColor = numberColors[colorIndex]
           return (
-            <svg
-              width="100%"
-              height="100%"
-              viewBox="0 0 100 100"
-              style={{ filter: 'drop-shadow(0 0 6px rgba(0,0,0,0.8))' }}
-            >
-              <text
-                x="50"
-                y="60"
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize="48"
-                fontWeight="bold"
-                fill={textColor}
-                fontFamily="monospace"
-                style={{ textShadow: '0 0 8px rgba(0,0,0,0.8)' }}
-              >
-                {number}
-              </text>
-            </svg>
+            <NumberIcon
+              value={number}
+              className="w-full h-full"
+              style={{ filter: 'drop-shadow(0 0 6px rgba(0,0,0,0.8))', color: textColor }}
+            />
           )
         }
         return null
 
       case 'revealed':
-        return (
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 100 100"
-          >
-            {/* Revealed empty cell - darker background */}
-            <rect
-              x="20"
-              y="20"
-              width="60"
-              height="60"
-              fill="rgba(0,0,0,0.3)"
-              stroke="rgba(255,255,255,0.2)"
-              strokeWidth="1"
-              rx="8"
-            />
-            {/* Subtle center dot to indicate it's revealed */}
-            <circle cx="50" cy="50" r="3" fill="rgba(255,255,255,0.3)" />
-          </svg>
-        )
+        return <CellRevealedIcon className="h-full w-full" />
 
       case 'empty':
       default:
-        return (
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 100 100"
-          >
-            {/* Subtle pattern for empty cell */}
-            <rect
-              x="20"
-              y="20"
-              width="60"
-              height="60"
-              fill="rgba(88, 87, 87, 0.12)"
-              stroke="rgba(255, 255, 255, 0.16)"
-              strokeWidth="1"
-              rx="8"
-            />
-            {/* Corner highlights */}
-            <circle cx="25" cy="25" r="2" fill="rgba(255,255,255,0.5)" />
-            <circle cx="75" cy="25" r="2" fill="rgba(255,255,255,0.5)" />
-            <circle cx="25" cy="75" r="2" fill="rgba(255,255,255,0.5)" />
-            <circle cx="75" cy="75" r="2" fill="rgba(255,255,255,0.5)" />
-          </svg>
-      )
+        return <CellEmptyIcon className="h-full w-full" />
     }
   }
 
   if (!active) {
     return (
-      <div style={{
-        width: '100%',
-        height: '100%',
-        background: 'linear-gradient(135deg, rgba(100,100,100,0.3), rgba(80,80,80,0.2))',
-        borderRadius: '8px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: 'rgba(255,255,255,0.3)',
-        fontSize: '0.8rem'
-      }}>
+      <div className="flex h-full w-full items-center justify-center border border-white/20 bg-gradient-to-br from-gray-700/40 to-gray-800/30 text-[0.6rem] text-white/30 shadow-[2px_2px_0_rgba(0,0,0,0.4)]">
         ...
       </div>
     )
@@ -167,10 +78,8 @@ const MinesweeperTile2DComponent = ({ index, variant = 'empty', number, config =
       onContextMenu={onContextMenu}
       enable-xr
       data-index={index}
-      style={{
-        ...getCardStyle(),
-        cursor: 'pointer'
-      } as React.CSSProperties}
+      className="flex cursor-pointer items-center justify-center overflow-hidden rounded border border-white/20 bg-black/40 shadow-[3px_3px_0_rgba(0,0,0,0.7)]"
+      style={getCardStyle() as React.CSSProperties}
     >
       {renderContent()}
     </div>
