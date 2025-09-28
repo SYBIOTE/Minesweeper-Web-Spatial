@@ -102,7 +102,7 @@ export const defaultConfig: GameConfig = {
   
   spatial: {
     cardSize: 0.8,
-    cardSpacing: 0.1,
+    cardSpacing: 0.15,
     cardThickness: 0.05,
     gridOffset: { x: 0, y: 0, z: 0 },
     cameraDistance: 8,
