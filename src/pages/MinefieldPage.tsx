@@ -71,10 +71,14 @@ export const MinefieldPage: React.FC = () => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search)
       const difficultyParam = urlParams.get('difficulty') as keyof GameConfig['difficulty']['preset']
+      const modeParam = urlParams.get('mode') // '2d' or '3d'
+      
+      // Determine if we should use 3D mode based on URL parameter or fallback to spatial detection
+      const use3DMode = modeParam ? modeParam === '3d' : isSpatial
 
       if (difficultyParam && defaultConfig.difficulty.preset[difficultyParam]) {
-        // Get the complete config adjusted for the current environment
-        const updatedConfig = getConfigForEnvironment(difficultyParam, isSpatial)
+        // Get the complete config adjusted for the selected mode
+        const updatedConfig = getConfigForEnvironment(difficultyParam, use3DMode)
         setGameConfig(updatedConfig)
       }
     }

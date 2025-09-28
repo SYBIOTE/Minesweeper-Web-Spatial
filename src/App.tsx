@@ -8,7 +8,7 @@ export const App = () => {
   const gameConfig = defaultConfig
 
   // Scene handlers
-  const handleStartGame = (difficulty: keyof GameConfig['difficulty']['preset']) => {
+  const handleStartGame = (difficulty: keyof GameConfig['difficulty']['preset'], is3DMode: boolean) => {
     // Initialize the minefield scene with proper WebSpatial configuration
     if (typeof window !== 'undefined') {
       try {
@@ -24,14 +24,14 @@ export const App = () => {
             }
           })
 
-          // Open the minefield scene in a new window with difficulty parameter
-          window.open(`/minefield?difficulty=${difficulty}`, 'minefieldScene')
+          // Open the minefield scene in a new window with difficulty and mode parameters
+          window.open(`/minefield?difficulty=${difficulty}&mode=${is3DMode ? '3d' : '2d'}`, 'minefieldScene')
         })
       } catch (error) {
         console.warn('WebSpatial SDK not available, opening in same window:', error)
         // Fallback for non-spatial environments
         if (window.location) {
-          window.location.href = `/minefield?difficulty=${difficulty}`
+          window.location.href = `/minefield?difficulty=${difficulty}&mode=${is3DMode ? '3d' : '2d'}`
         }
       }
     } else {

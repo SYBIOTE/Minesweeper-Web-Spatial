@@ -9,20 +9,27 @@ import { MiniFlagIcon } from '../assets/svgs/pixels/start/MiniFlagIcon'
 import { MiniMineIcon } from '../assets/svgs/pixels/start/MiniMineIcon'
 import { MouseCursorIcon } from '../assets/svgs/pixels/start/MouseCursorIcon'
 import { NumberIcon } from '../assets/svgs/pixels/minefield/NumberIcon'
-import { TargetIcon } from '../assets/svgs/pixels/TargetIcon'
+import { TargetIcon } from '../assets/svgs/pixels/start/TargetIcon'
+import { ToggleIcon } from '../assets/svgs/pixels/start/ToggleIcon'
+import { SpatialIcon } from '../assets/svgs/pixels/start/SpatialIcon'
+import { BrowserIcon } from '../assets/svgs/pixels/start/BrowserIcon'
+import { GamepadIcon } from '../assets/svgs/pixels/start/GamepadIcon'
 import { PixelBackground } from '../components/common/PixelBackground'
 
 interface GameStartSceneProps {
   config: GameConfig
   isSpatial: boolean
-  onStartGame: (selectedDifficulty: keyof GameConfig['difficulty']['preset']) => void
+  onStartGame: (selectedDifficulty: keyof GameConfig['difficulty']['preset'], is3DMode: boolean) => void
 }
 
 export const GameStartScene: React.FC<GameStartSceneProps> = ({ config, isSpatial, onStartGame }) => {
   const { difficulty } = config
   const [selectedDifficulty, setSelectedDifficulty] = useState(difficulty.level)
-  const currentPreset = getPresetForEnvironment(selectedDifficulty, isSpatial)
-  const currentConfig = getConfigForEnvironment(selectedDifficulty, isSpatial)
+  // 2D/3D toggle state - default to 2D for normal browsers, 3D for spatial
+  const [is3DMode, setIs3DMode] = useState(isSpatial)
+  
+  const currentPreset = getPresetForEnvironment(selectedDifficulty, is3DMode)
+  const currentConfig = getConfigForEnvironment(selectedDifficulty, is3DMode)
 
   const difficultyLevels: (keyof GameConfig['difficulty']['preset'])[] = ['beginner', 'intermediate', 'expert']
 
@@ -71,19 +78,39 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({ config, isSpatia
           }
         >
           <h1
-            className="text-xl sm:text-3xl lg:text-5xl font-bold mb-1 sm:mb-2 text-white tracking-wider uppercase"
+            className="text-xl sm:text-3xl lg:text-5xl font-bold mb-1 sm:mb-2 text-white tracking-wider uppercase select-none"
             style={{
               textShadow: '2px 2px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000',
-              letterSpacing: '0.1em'
+              letterSpacing: '0.1em',
+              userSelect: 'none'
             }}
           >
-            3D MINESWEEPER
+            {is3DMode ? '3D MINESWEEPER' : (
+              <>
+                <span className="relative inline-block text-red-400" style={{ opacity: 0.6 }}>
+                  3
+                  <span 
+                    className="absolute top-0 left-0 w-full h-full flex items-center justify-center text-red-500 font-bold"
+                    style={{ 
+                      fontSize: '1.4em',
+                      fontFamily: '"Press Start 2P", "Courier New", monospace',
+                      textShadow: '1px 1px 0px #000',
+                      lineHeight: '1'
+                    }}
+                  >
+                    ×
+                  </span>
+                </span>
+                <span className="text-cyan-400">2</span>
+                D MINESWEEPER
+              </>
+            )}
           </h1>
           <p
             className="text-xs sm:text-sm lg:text-base text-gray-300 tracking-wide px-4 uppercase"
             style={{ letterSpacing: '0.05em' }}
           >
-            Navigate through <span className="text-cyan-400 font-bold">3D SPACE</span> to find hidden mines
+            Navigate through <span className="text-cyan-400 font-bold">{is3DMode ? '3D SPACE' : '2D GRID'}</span> to find hidden mines
           </p>
           <div className="mt-1 sm:mt-2 flex justify-center space-x-3 items-center">
             <div className="animate-bounce w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8">
@@ -224,6 +251,58 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({ config, isSpatia
           </div>
         </div>
 
+        {/* 2D/3D Toggle - Only show in spatial environments */}
+        {isSpatial && (
+          <div
+            className="mb-2 sm:mb-3 p-2 sm:p-3 border-2 border-purple-400 w-full max-w-md"
+            style={
+              {
+                '--xr-background-material': 'thin',
+                '--xr-back': 12,
+                '--xr-elevation': '0.06',
+                enableXr: true,
+                background: 'rgba(0, 0, 0, 0.9)',
+                boxShadow: '3px 3px 0px rgba(0, 0, 0, 0.7), 1px 1px 0px rgba(255, 255, 255, 0.3)'
+              } as React.CSSProperties
+            }
+          >
+            <h3
+              className="text-sm sm:text-base font-bold mb-2 text-center uppercase tracking-wide text-purple-300"
+              style={{ textShadow: '1px 1px 0px #000' }}
+            >
+              Game Mode
+            </h3>
+            
+            <div className="flex justify-center">
+              <button
+                onClick={() => setIs3DMode(!is3DMode)}
+                className={`px-4 py-2 text-sm font-bold border-2 uppercase tracking-wide transition-all flex items-center gap-2 ${
+                  is3DMode 
+                    ? 'bg-purple-600 text-white border-purple-400' 
+                    : 'bg-cyan-600 text-white border-cyan-400'
+                }`}
+                style={
+                  {
+                    '--xr-background-material': 'thick',
+                    '--xr-back': 8,
+                    '--xr-elevation': '0.04',
+                    enableXr: true,
+                    boxShadow: '2px 2px 0px rgba(0, 0, 0, 0.8), inset -1px -1px 0px rgba(0, 0, 0, 0.3)',
+                    textShadow: '1px 1px 0px #000'
+                  } as React.CSSProperties
+                }
+              >
+                <ToggleIcon className="w-4 h-4" is3D={is3DMode} />
+                {is3DMode ? '3D MODE' : '2D MODE'} - Click to Toggle
+              </button>
+            </div>
+            
+            <div className="mt-2 text-xs text-center text-gray-400">
+              {is3DMode ? 'Navigate in 3D space' : 'Classic flat grid view'}
+            </div>
+          </div>
+        )}
+
         {/* Enhanced Instructions */}
         <div
           className="mb-2 sm:mb-3 p-2 sm:p-3 border-2 border-white w-full max-w-lg"
@@ -283,7 +362,7 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({ config, isSpatia
 
         {/* Start Button */}
         <button
-          onClick={() => onStartGame(selectedDifficulty)}
+          onClick={() => onStartGame(selectedDifficulty, is3DMode)}
           className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-black border-2 border-white uppercase tracking-wider"
           style={
             {
@@ -303,7 +382,7 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({ config, isSpatia
         </button>
 
         {/* Spatial Environment Indicator */}
-        {isSpatial && (
+        {(
           <div
             className="mt-2 sm:mt-3 text-xs sm:text-sm text-cyan-400 font-bold animate-pulse text-center px-4 uppercase tracking-wide border border-cyan-400 p-1"
             style={
@@ -316,12 +395,15 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({ config, isSpatia
               } as React.CSSProperties
             }
           >
-            🕶️ SPATIAL ENVIRONMENT DETECTED
+            <div className="flex items-center justify-center gap-2">
+              {isSpatial ? <SpatialIcon className="w-4 h-4" /> : <BrowserIcon className="w-4 h-4" />}
+              {isSpatial ? 'SPATIAL ENVIRONMENT DETECTED' : 'NORMAL BROWSER DETECTED'}
+            </div>
           </div>
         )}
 
         {/* Spatial Scene Transition Hint */}
-        {isSpatial && (
+        {(
           <div
             className="mt-1 sm:mt-2 text-xs text-blue-300 font-bold text-center px-4 uppercase tracking-wide border border-blue-300 p-1"
             style={
@@ -334,7 +416,10 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({ config, isSpatia
               } as React.CSSProperties
             }
           >
-            🎮 GAME OPENS IN NEW SPATIAL SCENE
+            <div className="flex items-center justify-center gap-2">
+              {isSpatial ? <GamepadIcon className="w-4 h-4" /> : <BrowserIcon className="w-4 h-4" />}
+              {isSpatial ? 'GAME OPENS IN NEW SPATIAL SCENE' : 'ONLY 2D MODE FOR NORMAL BROWSERS'}
+            </div>
           </div>
         )}
       </div>
