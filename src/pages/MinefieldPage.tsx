@@ -5,8 +5,14 @@ import { BombIcon } from '../assets/svgs/pixels/minefield/BombIcon'
 import { FlagIcon as PixelFlagIcon } from '../assets/svgs/pixels/minefield/FlagIcon'
 import { NumberIcon } from '../assets/svgs/pixels/minefield/NumberIcon'
 import { PixelBackground } from '../components/PixelBackground'
-import { GameController } from '../components/GameController'
+import { GameController } from '../components/hooks/GameController'
 import { Volume3D } from '../components/Volume3D'
+import { useAudio } from '../components/hooks/useAudio'
+import { SoundIcon } from '../assets/svgs/pixels/start/SoundIcon'
+import { FlagModeIcon } from '../assets/svgs/pixels/minefield/FlagModeIcon'
+import { RevealIcon } from '../assets/svgs/pixels/minefield/RevealIcon'
+import { ExitIcon } from '../assets/svgs/pixels/minefield/ExitIcon'
+import { ResetIcon } from '../assets/svgs/pixels/minefield/ResetIcon'
 
 const GameEndCelebration: React.FC<{ isSpatial: boolean; isWin: boolean; countdown: number }> = ({
   isSpatial,
@@ -66,7 +72,7 @@ export const MinefieldPage: React.FC = () => {
 
   // Get difficulty from URL parameters
   const [gameConfig, setGameConfig] = useState(defaultConfig)
-
+  const { audioEnabled, setEnabled: setAudioEnabled, playSound } = useAudio(gameConfig)
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search)
@@ -109,7 +115,7 @@ export const MinefieldPage: React.FC = () => {
 
       const startCelebration = () => {
         setShowCelebration(true)
-
+        playSound(won ? 'win' : 'lose')
         if (won) {
           // For wins, show celebration for 6 seconds total
           setCountdown(6)
@@ -224,12 +230,12 @@ export const MinefieldPage: React.FC = () => {
             3D MINESWEEPER
           </h1>
           <div className="flex items-center gap-2 text-cyan-300">
-            <PixelFlagIcon className="w-4 h-4" />
+            <PixelFlagIcon className="w-8 h-8" />
             <span>Mines {gameStats?.remainingMines ?? gameConfig.mines.count}</span>
           </div>
           <div className="flex items-center gap-2 text-yellow-200">
             <NumberIcon
-              className="w-4 h-4"
+              className="w-8 h-8"
               value={Math.min(8, Math.max(1, Math.round((gameStats?.progress || 0) / 12) || 1))}
             />
             <span>Progress {(gameStats?.progress || 0).toFixed(0)}%</span>
@@ -238,10 +244,21 @@ export const MinefieldPage: React.FC = () => {
 
         <div className="flex items-center space-x-3 text-xs">
           <button
+              onClick={() => setAudioEnabled(!audioEnabled)}
+              className={`px-1 py-1 border-2 border-white shadow-[2px_2px_0_rgba(0,0,0,0.6)] flex items-center gap-1`}
+              style={
+                {
+                  '--xr-background-material': 'thin',
+                  '--xr-back': 5,
+                  enableXr: true
+                } as React.CSSProperties
+              }
+            >
+              <SoundIcon className="w-8 h-8" isEnabled={audioEnabled} />
+            </button>
+          <button
             onClick={gameControls.toggleFlagMode}
-            className={`px-3 py-1 border-2 border-white shadow-[2px_2px_0_rgba(0,0,0,0.6)] ${
-              gameControls.flagMode ? 'bg-yellow-500 text-black' : 'bg-gray-700 text-gray-200'
-            }`}
+            className={`px-1 py-1 border-2 border-white shadow-[2px_2px_0_rgba(0,0,0,0.6)] flex items-center gap-1 `}
             style={
               {
                 '--xr-background-material': 'thin',
@@ -250,12 +267,16 @@ export const MinefieldPage: React.FC = () => {
               } as React.CSSProperties
             }
           >
-            {gameControls.flagMode ? 'Flag Mode' : 'Reveal Mode'}
+            {gameControls.flagMode ? 
+              <FlagModeIcon className="w-8 h-8" /> : 
+              <RevealIcon className="w-8 h-8" />
+            }
           </button>
+          
 
           <button
             onClick={handleResetGame}
-            className="px-3 py-1 border-2 border-white bg-red-600 text-white shadow-[2px_2px_0_rgba(0,0,0,0.6)] hover:bg-red-700"
+            className="px-1 py-1 border-2 border-white text-white shadow-[2px_2px_0_rgba(0,0,0,0.6)] hover:bg-gray-800 flex items-center gap-1"
             style={
               {
                 '--xr-background-material': 'thin',
@@ -264,12 +285,12 @@ export const MinefieldPage: React.FC = () => {
               } as React.CSSProperties
             }
           >
-            Reset
+            <ResetIcon className="w-8 h-8" />
           </button>
 
           <button
             onClick={handleExitGame}
-            className="px-3 py-1 border-2 border-white bg-gray-700 text-white shadow-[2px_2px_0_rgba(0,0,0,0.6)] hover:bg-gray-800"
+            className="px-1 py-1 border-2 border-white text-white shadow-[2px_2px_0_rgba(0,0,0,0.6)] hover:bg-gray-800 flex items-center gap-1"
             style={
               {
                 '--xr-background-material': 'thin',
@@ -278,7 +299,7 @@ export const MinefieldPage: React.FC = () => {
               } as React.CSSProperties
             }
           >
-            Exit
+            <ExitIcon className="w-8 h-8" />
           </button>
         </div>
       </div>

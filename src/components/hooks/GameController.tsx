@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import type { GameConfig } from '../AppConfig'
-import { MinesweeperGame, type GameConfig as GameConfigType, type GameState } from '../game/MinesweeperGame'
+import type { GameConfig } from '../../AppConfig'
+import { MinesweeperGame, type GameConfig as GameConfigType, type GameState } from '../../game/MinesweeperGame'
+import { useAudio } from './useAudio'
 
 interface GameControllerProps {
   config: GameConfig
@@ -47,6 +48,7 @@ export const GameController = ({ config, onGameStateChange, onGameEnd }: GameCon
 
   const onGameStateChangeRef = useRef(onGameStateChange)
   onGameStateChangeRef.current = onGameStateChange
+  const { playSound } = useAudio(config)
 
   const onGameEndRef = useRef(onGameEnd)
   onGameEndRef.current = onGameEnd
@@ -77,12 +79,14 @@ export const GameController = ({ config, onGameStateChange, onGameEnd }: GameCon
         const result = game.toggleFlag(index)
         if (result.success) {
           updateGameState()
+          playSound('flag')
         }
       } else if (isMiddleClick && config.mechanics.chordClick) {
         // Chord click
         const result = game.chordClick(index)
         if (result.success) {
           updateGameState()
+          playSound('reveal')
           if (result.gameOver && onGameEndRef.current) {
             onGameEndRef.current(result.won || false, game.getStats())
           }
@@ -91,8 +95,15 @@ export const GameController = ({ config, onGameStateChange, onGameEnd }: GameCon
         // Regular reveal
         const result = game.revealCell(index)
         if (result.success) {
-          updateGameState()
+          const cell = game.getCell(index)
+          if (cell?.isMine) {
+            playSound('mine') // 🔊 Mine explosion sound
+          } else {
+            playSound('reveal') // 🔊 Cell reveal sound
+          }
+            updateGameState()
           if (result.gameOver && onGameEndRef.current) {
+            playSound(result.won ? 'win' : 'lose') // 🔊 End game sounds
             onGameEndRef.current(result.won || false, game.getStats())
           }
         }

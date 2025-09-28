@@ -14,7 +14,9 @@ import { ToggleIcon } from '../assets/svgs/pixels/start/ToggleIcon'
 import { SpatialIcon } from '../assets/svgs/pixels/start/SpatialIcon'
 import { BrowserIcon } from '../assets/svgs/pixels/start/BrowserIcon'
 import { GamepadIcon } from '../assets/svgs/pixels/start/GamepadIcon'
+import { SoundIcon } from '../assets/svgs/pixels/start/SoundIcon'
 import { PixelBackground } from '../components/PixelBackground'
+import { useAudio } from '../components/hooks/useAudio'
 
 interface GameStartSceneProps {
   config: GameConfig
@@ -27,7 +29,8 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({ config, isSpatia
   const [selectedDifficulty, setSelectedDifficulty] = useState(difficulty.level)
   // 2D/3D toggle state - default to 2D for normal browsers, 3D for spatial
   const [is3DMode, setIs3DMode] = useState(isSpatial)
-  
+  // Add after other state declarations
+const { audioEnabled, setEnabled: setAudioEnabled , playSound } = useAudio(config)
   const currentPreset = getPresetForEnvironment(selectedDifficulty, is3DMode)
   const currentConfig = getConfigForEnvironment(selectedDifficulty, is3DMode)
 
@@ -129,7 +132,7 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({ config, isSpatia
 
         {/* Difficulty Selector */}
         <div
-          className="mb-2 sm:mb-3 lg:mb-4 p-2 sm:p-3 lg:p-4 border-2 border-gray-400 w-full max-w-3xl"
+          className="mb-2 sm:mb-3 lg:mb-4 p-2 sm:p-3 lg:p-4 border-2 border-gray-400 w-full max-w-3xl relative"
           style={
             {
               '--xr-background-material': isSpatial ? 'thin' : 'none',
@@ -141,6 +144,27 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({ config, isSpatia
             } as React.CSSProperties
           }
         >
+          {/* Sound Toggle Button - Top Right Corner */}
+          <button
+            onClick={() => {
+              playSound('reveal')
+              setAudioEnabled(!audioEnabled)
+            }}
+            className="absolute top-2 right-2 px-1 py-1 border-2 border-white text-white text-xs font-bold uppercase tracking-wide flex items-center gap-1"
+            style={
+              {
+                '--xr-background-material': 'thick',
+                '--xr-back': 8,
+                '--xr-elevation': '0.05',
+                enableXr: true,
+                boxShadow: '2px 2px 0px rgba(0, 0, 0, 0.8), inset -1px -1px 0px rgba(0, 0, 0, 0.3)',
+                textShadow: '1px 1px 0px #000'
+              } as React.CSSProperties
+            }
+          >
+            <SoundIcon className="w-8 h-8" isEnabled={audioEnabled} />
+          </button>
+
           <h2
             className="text-base sm:text-lg lg:text-xl font-bold mb-2 sm:mb-3 text-center uppercase tracking-wide"
             style={{
@@ -151,11 +175,15 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({ config, isSpatia
             CHOOSE YOUR CHALLENGE
           </h2>
 
+
           <div className="flex justify-center mb-2 sm:mb-3">
             <div className="relative w-full max-w-xs">
               <select
                 value={selectedDifficulty}
-                onChange={(e) => setSelectedDifficulty(e.target.value as keyof GameConfig['difficulty']['preset'])}
+                onChange={(e) => {
+                  playSound('reveal')
+                  setSelectedDifficulty(e.target.value as keyof GameConfig['difficulty']['preset'])
+                }}
                 className={`appearance-none text-white text-sm sm:text-base lg:text-lg font-bold px-3 sm:px-4 lg:px-6 py-1 sm:py-2 lg:py-3 pr-6 sm:pr-8 lg:pr-10 cursor-pointer border-2 border-white w-full uppercase tracking-wide`}
                 style={
                   {
@@ -275,7 +303,10 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({ config, isSpatia
             
             <div className="flex justify-center">
               <button
-                onClick={() => setIs3DMode(!is3DMode)}
+                onClick={() => {
+                  playSound('reveal')
+                  setIs3DMode(!is3DMode)
+                }}
                 className={`px-4 py-2 text-sm font-bold border-2 uppercase tracking-wide transition-all flex items-center gap-2 ${
                   is3DMode 
                     ? 'bg-purple-600 text-white border-purple-400' 
@@ -362,7 +393,10 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({ config, isSpatia
 
         {/* Start Button */}
         <button
-          onClick={() => onStartGame(selectedDifficulty, is3DMode)}
+          onClick={() => {
+            playSound('reveal')
+            onStartGame(selectedDifficulty, is3DMode)
+          }}
           className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 text-sm sm:text-base lg:text-lg font-black border-2 border-white uppercase tracking-wider"
           style={
             {
