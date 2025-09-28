@@ -346,7 +346,7 @@ export const MinefieldPage: React.FC = () => {
           } as React.CSSProperties
         }
       >
-        <Volume3D config={gameConfig} gameControls={gameControls} />
+        <Volume3D config={gameConfig} isSpatial={isSpatial} gameControls={gameControls} />
       </div>
     </div>
   )

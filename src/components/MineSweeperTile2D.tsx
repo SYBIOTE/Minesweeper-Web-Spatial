@@ -15,6 +15,7 @@ type MinesweeperTile2DProps = {
   number?: number
   config?: GameConfig
   active?: boolean
+  isSpatial?: boolean
   onClick?: () => void
   onContextMenu?: (e: React.MouseEvent) => void
 }
@@ -25,6 +26,7 @@ const MinesweeperTile2DComponent = ({
   number,
   config = defaultConfig,
   active = true,
+  isSpatial = false,
   onClick,
   onContextMenu,
   size
@@ -38,6 +40,18 @@ const MinesweeperTile2DComponent = ({
     width: `${size}px`,
     height: `${size}px`
   })
+
+  // Determine opacity based on variant and spatial mode
+  const getOpacity = () => {
+    if (!active) return 'opacity-30'
+    
+    // In spatial mode, highly reduce opacity for revealed empty cells
+    if (isSpatial && variant === 'revealed' && (!number || number === 0)) {
+      return 'opacity-5'
+    }
+    
+    return 'opacity-80'
+  }
 
   const renderContent = () => {
     switch (variant) {
@@ -84,7 +98,7 @@ const MinesweeperTile2DComponent = ({
       onContextMenu={onContextMenu}
       enable-xr
       data-index={index}
-      className="flex cursor-pointer items-center justify-center overflow-hidden rounded border border-white/20 bg-black/40 shadow-[3px_3px_0_rgba(0,0,0,0.7)] opacity-80 transition-all duration-200 hover:opacity-100 hover:border-cyan-400/60 hover:shadow-[0_0_20px_rgba(34,211,238,0.4),3px_3px_0_rgba(0,0,0,0.7)] hover:scale-105"
+      className={`flex cursor-pointer items-center justify-center overflow-hidden rounded border border-white/20 bg-black/40 shadow-[3px_3px_0_rgba(0,0,0,0.7)] ${getOpacity()} transition-all duration-200 hover:opacity-100 hover:border-cyan-400/60 hover:shadow-[0_0_20px_rgba(34,211,238,0.4),3px_3px_0_rgba(0,0,0,0.7)] hover:scale-105`}
       style={getCardStyle() as React.CSSProperties}
     >
       {renderContent()}

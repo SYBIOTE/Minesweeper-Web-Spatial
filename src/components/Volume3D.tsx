@@ -5,6 +5,7 @@ import { MinesweeperUnit2D } from './MineSweeperTile2D'
 
 interface Volume3DProps {
   config: GameConfig
+  isSpatial?: boolean
   gameControls?: {
     handleCellClick: (index: number, event?: React.MouseEvent) => void
     handleCellRightClick: (index: number, event: React.MouseEvent) => void
@@ -19,7 +20,7 @@ interface Volume3DProps {
 }
 
 // will contain the 3d volume and responsible for generating the 3d grid of webspatial cards for minesweeper
-const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
+const Volume3DComponent = ({ config, isSpatial = false, gameControls }: Volume3DProps) => {
   //const isSpatial = navigator.userAgent.includes("WebSpatial") || import.meta.env.XR_ENV === "avp"
 
   // Use config for grid dimensions
@@ -128,6 +129,7 @@ const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
                     number={cellData.number}
                     config={config}
                     active={true}
+                    isSpatial={isSpatial}
                     size={cardSize}
                     index={index}
                     onClick={() => gameControls?.handleCellClick(index)}
