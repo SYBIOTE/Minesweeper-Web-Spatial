@@ -28,5 +28,3 @@ export const MiniMineIcon: React.FC<IconProps> = ({ className, style }) => (
     <rect x="9" y="10" width="1" height="2" fill="#dc2626" />
   </svg>
 )
-
-

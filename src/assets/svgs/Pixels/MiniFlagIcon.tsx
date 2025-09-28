@@ -21,5 +21,3 @@ export const MiniFlagIcon: React.FC<IconProps> = ({ className, style }) => (
     <rect x="7" y="3" width="5" height="1" fill="#fca5a5" />
   </svg>
 )
-
-

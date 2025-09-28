@@ -1,18 +1,22 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
-import { MinesweeperGame, type GameConfig as GameConfigType, type GameState } from '../game/MinesweeperGame'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+
 import type { GameConfig } from '../AppConfig'
+import { MinesweeperGame, type GameConfig as GameConfigType, type GameState } from '../game/MinesweeperGame'
 
 interface GameControllerProps {
   config: GameConfig
   onGameStateChange?: (gameState: GameState) => void
-  onGameEnd?: (won: boolean, stats: {
-    revealedCount: number
-    flagCount: number
-    mineCount: number
-    remainingMines: number
-    progress: number
-    elapsedTime: number
-  }) => void
+  onGameEnd?: (
+    won: boolean,
+    stats: {
+      revealedCount: number
+      flagCount: number
+      mineCount: number
+      remainingMines: number
+      progress: number
+      elapsedTime: number
+    }
+  ) => void
 }
 
 export const GameController = ({ config, onGameStateChange, onGameEnd }: GameControllerProps) => {
@@ -31,19 +35,19 @@ export const GameController = ({ config, onGameStateChange, onGameEnd }: GameCon
 
   // Initialize game instance - recreate when config changes
   const [game, setGame] = useState(() => new MinesweeperGame(gameConfig))
-  
+
   // Game state
   const [gameState, setGameState] = useState(game.getGameState())
   const [stats, setStats] = useState(game.getStats())
   const [flagMode, setFlagMode] = useState(config.mechanics.flagMode)
-  
+
   // Use refs to avoid dependency issues
   const gameStateRef = useRef(gameState)
   gameStateRef.current = gameState
-  
+
   const onGameStateChangeRef = useRef(onGameStateChange)
   onGameStateChangeRef.current = onGameStateChange
-  
+
   const onGameEndRef = useRef(onGameEnd)
   onGameEndRef.current = onGameEnd
 
@@ -53,56 +57,62 @@ export const GameController = ({ config, onGameStateChange, onGameEnd }: GameCon
     const newStats = game.getStats()
     setGameState(newGameState)
     setStats(newStats)
-    
+
     if (onGameStateChangeRef.current) {
       onGameStateChangeRef.current(newGameState)
     }
   }, [game])
 
   // Handle cell click
-  const handleCellClick = useCallback((index: number, event?: React.MouseEvent) => {
-    if (gameStateRef.current.gameStatus !== 'playing') return
+  const handleCellClick = useCallback(
+    (index: number, event?: React.MouseEvent) => {
+      if (gameStateRef.current.gameStatus !== 'playing') return
 
-    const isRightClick = event?.button === 2 || event?.ctrlKey || event?.metaKey
-    const isMiddleClick = event?.button === 1
+      const isRightClick = event?.button === 2 || event?.ctrlKey || event?.metaKey
+      const isMiddleClick = event?.button === 1
 
-    // Handle different click types
-    if (isRightClick || flagMode) {
-      // Toggle flag
-      const result = game.toggleFlag(index)
-      if (result.success) {
-        updateGameState()
-      }
-    } else if (isMiddleClick && config.mechanics.chordClick) {
-      // Chord click
-      const result = game.chordClick(index)
-      if (result.success) {
-        updateGameState()
-        if (result.gameOver && onGameEndRef.current) {
-          onGameEndRef.current(result.won || false, game.getStats())
+      // Handle different click types
+      if (isRightClick || flagMode) {
+        // Toggle flag
+        const result = game.toggleFlag(index)
+        if (result.success) {
+          updateGameState()
+        }
+      } else if (isMiddleClick && config.mechanics.chordClick) {
+        // Chord click
+        const result = game.chordClick(index)
+        if (result.success) {
+          updateGameState()
+          if (result.gameOver && onGameEndRef.current) {
+            onGameEndRef.current(result.won || false, game.getStats())
+          }
+        }
+      } else {
+        // Regular reveal
+        const result = game.revealCell(index)
+        if (result.success) {
+          updateGameState()
+          if (result.gameOver && onGameEndRef.current) {
+            onGameEndRef.current(result.won || false, game.getStats())
+          }
         }
       }
-    } else {
-      // Regular reveal
-      const result = game.revealCell(index)
-      if (result.success) {
-        updateGameState()
-        if (result.gameOver && onGameEndRef.current) {
-          onGameEndRef.current(result.won || false, game.getStats())
-        }
-      }
-    }
-  }, [game, flagMode, config.mechanics.chordClick, updateGameState])
+    },
+    [game, flagMode, config.mechanics.chordClick, updateGameState]
+  )
 
   // Handle cell right click
-  const handleCellRightClick = useCallback((index: number, event: React.MouseEvent) => {
-    event.preventDefault()
-    handleCellClick(index, event)
-  }, [handleCellClick])
+  const handleCellRightClick = useCallback(
+    (index: number, event: React.MouseEvent) => {
+      event.preventDefault()
+      handleCellClick(index, event)
+    },
+    [handleCellClick]
+  )
 
   // Toggle flag mode
   const toggleFlagMode = useCallback(() => {
-    setFlagMode(prev => !prev)
+    setFlagMode((prev) => !prev)
   }, [])
 
   // Reset game
@@ -112,40 +122,46 @@ export const GameController = ({ config, onGameStateChange, onGameEnd }: GameCon
   }, [game, updateGameState])
 
   // Get cell variant and number for rendering
-  const getCellData = useCallback((index: number) => {
-    return {
-      variant: game.getCellVariant(index),
-      number: game.getCellNumber(index),
-      isRevealed: game.getCell(index)?.isRevealed || false,
-      isFlagged: game.getCell(index)?.isFlagged || false,
-      isMine: game.getCell(index)?.isMine || false
-    }
-  }, [game])
+  const getCellData = useCallback(
+    (index: number) => {
+      return {
+        variant: game.getCellVariant(index),
+        number: game.getCellNumber(index),
+        isRevealed: game.getCell(index)?.isRevealed || false,
+        isFlagged: game.getCell(index)?.isFlagged || false,
+        isMine: game.getCell(index)?.isMine || false
+      }
+    },
+    [game]
+  )
 
   // Update game when config changes
   useEffect(() => {
     // Create new game instance with new config
     const newGame = new MinesweeperGame(gameConfig)
     setGame(newGame)
-    
+
     const newGameState = newGame.getGameState()
     const newStats = newGame.getStats()
     setGameState(newGameState)
     setStats(newStats)
-    
+
     if (onGameStateChangeRef.current) {
       onGameStateChangeRef.current(newGameState)
     }
   }, [gameConfig])
 
   // Memoize the stable controls separately from the changing state
-  const stableControls = useMemo(() => ({
-    handleCellClick,
-    handleCellRightClick,
-    toggleFlagMode,
-    resetGame,
-    getCellData
-  }), [handleCellClick, handleCellRightClick, toggleFlagMode, resetGame, getCellData])
+  const stableControls = useMemo(
+    () => ({
+      handleCellClick,
+      handleCellRightClick,
+      toggleFlagMode,
+      resetGame,
+      getCellData
+    }),
+    [handleCellClick, handleCellRightClick, toggleFlagMode, resetGame, getCellData]
+  )
 
   // Expose game controls and state
   const gameControls = {
@@ -163,13 +179,20 @@ export const GameController = ({ config, onGameStateChange, onGameEnd }: GameCon
 
 // Hook for using the game controller
 // eslint-disable-next-line react-refresh/only-export-components
-export const useMinesweeperGame = (config: GameConfig, onGameStateChange?: (gameState: GameState) => void, onGameEnd?: (won: boolean, stats: {
-  revealedCount: number
-  flagCount: number
-  mineCount: number
-  remainingMines: number
-  progress: number
-  elapsedTime: number
-}) => void) => {
+export const useMinesweeperGame = (
+  config: GameConfig,
+  onGameStateChange?: (gameState: GameState) => void,
+  onGameEnd?: (
+    won: boolean,
+    stats: {
+      revealedCount: number
+      flagCount: number
+      mineCount: number
+      remainingMines: number
+      progress: number
+      elapsedTime: number
+    }
+  ) => void
+) => {
   return GameController({ config, onGameStateChange, onGameEnd })
 }

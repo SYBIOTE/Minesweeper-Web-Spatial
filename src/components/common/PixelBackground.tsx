@@ -35,7 +35,8 @@ export const PixelBackground: React.FC<PixelBackgroundProps> = ({ isVisible = tr
         <div
           className="absolute inset-2 border border-blue-300/50"
           style={{
-            background: 'linear-gradient(45deg, rgba(59, 130, 246, 0.4) 25%, transparent 25%, transparent 75%, rgba(59, 130, 246, 0.4) 75%)',
+            background:
+              'linear-gradient(45deg, rgba(59, 130, 246, 0.4) 25%, transparent 25%, transparent 75%, rgba(59, 130, 246, 0.4) 75%)',
             backgroundSize: '8px 8px'
           }}
         />

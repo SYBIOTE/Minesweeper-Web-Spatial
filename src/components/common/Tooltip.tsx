@@ -9,7 +9,7 @@ interface TooltipProps {
 
 export const Tooltip = ({ children, content, position = 'top', delay = 500 }: TooltipProps) => {
   const [isVisible, setIsVisible] = useState(false)
-  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null)
+  const [timeoutId, setTimeoutId] = useState<number | null>(null)
 
   const handleMouseEnter = () => {
     if (timeoutId) {
@@ -46,14 +46,9 @@ export const Tooltip = ({ children, content, position = 'top', delay = 500 }: To
   }
 
   return (
-    <div
-      enable-xr
-      className="relative inline-block"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
+    <div enable-xr className="relative inline-block" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       {children}
-      <div 
+      <div
         className={`${getPositionClasses()}`}
         style={{
           background: 'linear-gradient(180deg, rgba(16,25,30,0.9) 0%, rgba(17,43,48,0.9) 100%)',

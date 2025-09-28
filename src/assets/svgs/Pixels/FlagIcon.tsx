@@ -27,5 +27,3 @@ export const FlagIcon: React.FC<IconProps> = ({ className, style }) => (
     <rect x="13" y="4" width="1" height="1" fill="transparent" />
   </svg>
 )
-
-

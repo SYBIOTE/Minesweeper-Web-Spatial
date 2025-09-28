@@ -25,5 +25,3 @@ export const BombIcon: React.FC<IconProps> = ({ className, style }) => (
     <rect x="10" y="1" width="1" height="1" fill="#f97316" />
   </svg>
 )
-
-

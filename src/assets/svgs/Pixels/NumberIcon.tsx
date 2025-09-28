@@ -50,5 +50,3 @@ export const NumberIcon: React.FC<IconProps> = ({ value = 3, className, style })
     </text>
   </svg>
 )
-
-

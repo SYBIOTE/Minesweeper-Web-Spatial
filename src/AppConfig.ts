@@ -1,32 +1,32 @@
 // Game Configuration for 3D Spatial Minesweeper
-export interface GameConfig {  
+export interface GameConfig {
   // Mine settings
   mines: {
     count: number
     density: number // mines per 100 cells
   }
-  
+
   // Difficulty presets
   difficulty: {
     level: 'beginner' | 'intermediate' | 'expert' | 'flatscreen'
     preset: {
-      beginner: { width: number, height: number, depth: number, mines: number }
-      intermediate: { width: number, height: number, depth: number, mines: number }
-      expert: { width: number, height: number, depth: number, mines: number }
-      flatscreen: { width: number, height: number, depth: number, mines: number }
+      beginner: { width: number; height: number; depth: number; mines: number }
+      intermediate: { width: number; height: number; depth: number; mines: number }
+      expert: { width: number; height: number; depth: number; mines: number }
+      flatscreen: { width: number; height: number; depth: number; mines: number }
     }
   }
-  
+
   // 3D Spatial settings
   spatial: {
     cardSize: number // Size of each 3D card in units
     cardSpacing: number // Space between cards
     cardThickness: number // Depth of each card
-    gridOffset: { x: number, y: number, z: number } // Center offset for the grid
+    gridOffset: { x: number; y: number; z: number } // Center offset for the grid
     cameraDistance: number // Distance from camera to grid center
     cameraHeight: number // Height offset for camera
   }
-  
+
   // Visual settings
   visual: {
     cardColors: {
@@ -49,7 +49,7 @@ export interface GameConfig {
       shadowEnabled: boolean
     }
   }
-  
+
   // Game mechanics
   mechanics: {
     firstClickSafe: boolean // First click never hits a mine
@@ -59,7 +59,7 @@ export interface GameConfig {
     timerEnabled: boolean
     scoreEnabled: boolean
   }
-  
+
   // Audio settings
   audio: {
     enabled: boolean
@@ -72,7 +72,7 @@ export interface GameConfig {
       lose: string
     }
   }
-  
+
   // Performance settings
   performance: {
     maxCardsPerFrame: number // For rendering optimization
@@ -84,22 +84,21 @@ export interface GameConfig {
 
 // Default configuration
 export const defaultConfig: GameConfig = {
-  
   mines: {
     count: 40,
     density: 12.5 // 40 mines in 512 cells = ~7.8%
   },
-  
+
   difficulty: {
     level: 'intermediate',
     preset: {
       beginner: { width: 3, height: 3, depth: 3, mines: 2 },
-      intermediate: { width: 5, height:5, depth: 5, mines: 10 },
+      intermediate: { width: 5, height: 5, depth: 5, mines: 10 },
       expert: { width: 7, height: 7, depth: 7, mines: 30 },
       flatscreen: { width: 11, height: 11, depth: 1, mines: 20 }
-    } 
+    }
   },
-  
+
   spatial: {
     cardSize: 0.8,
     cardSpacing: 0.1,
@@ -108,7 +107,7 @@ export const defaultConfig: GameConfig = {
     cameraDistance: 8,
     cameraHeight: 1.6
   },
-  
+
   visual: {
     cardColors: {
       unrevealed: '#2a2a2a',
@@ -123,7 +122,7 @@ export const defaultConfig: GameConfig = {
         '#800000', // 5 - maroon
         '#008080', // 6 - teal
         '#000000', // 7 - black
-        '#808080'  // 8 - gray
+        '#808080' // 8 - gray
       ],
       highlight: '#ffff00'
     },
@@ -139,7 +138,7 @@ export const defaultConfig: GameConfig = {
       shadowEnabled: false
     }
   },
-  
+
   mechanics: {
     firstClickSafe: true,
     autoReveal: true,
@@ -148,7 +147,7 @@ export const defaultConfig: GameConfig = {
     timerEnabled: true,
     scoreEnabled: true
   },
-  
+
   audio: {
     enabled: true,
     volume: 0.7,
@@ -160,7 +159,7 @@ export const defaultConfig: GameConfig = {
       lose: '/sounds/lose.mp3'
     }
   },
-  
+
   performance: {
     maxCardsPerFrame: 100,
     lodEnabled: true,
@@ -173,9 +172,9 @@ export const defaultConfig: GameConfig = {
 export const GameConfigUtils = {
   // Calculate total cells in grid
   getTotalCells: (config: GameConfig): number => {
-    const level = config.difficulty.level as keyof typeof config.difficulty.preset;
-    const preset = config.difficulty.preset[level];
-    return preset.width * preset.height * preset.depth;
+    const level = config.difficulty.level as keyof typeof config.difficulty.preset
+    const preset = config.difficulty.preset[level]
+    return preset.width * preset.height * preset.depth
   },
 
   // Calculate mine density percentage
@@ -183,11 +182,14 @@ export const GameConfigUtils = {
     const totalCells = GameConfigUtils.getTotalCells(config)
     return (config.mines.count / totalCells) * 100
   },
-  
+
   // Apply difficulty preset
-  applyDifficultyPreset: (config: GameConfig, level: 'beginner' | 'intermediate' | 'expert' /* | 'flatscreen' */): GameConfig => {
+  applyDifficultyPreset: (
+    config: GameConfig,
+    level: 'beginner' | 'intermediate' | 'expert' /* | 'flatscreen' */
+  ): GameConfig => {
     // Only allow valid keys for preset
-    const preset = config.difficulty.preset[level as keyof typeof config.difficulty.preset];
+    const preset = config.difficulty.preset[level as keyof typeof config.difficulty.preset]
     return {
       ...config,
       difficulty: { ...config.difficulty, level },
@@ -197,56 +199,69 @@ export const GameConfigUtils = {
       },
       mines: {
         count: preset.mines,
-        density: (preset.mines / (config.difficulty.preset[config.difficulty.level].width * config.difficulty.preset[config.difficulty.level].height * config.difficulty.preset[config.difficulty.level].depth)) * 100
+        density:
+          (preset.mines /
+            (config.difficulty.preset[config.difficulty.level].width *
+              config.difficulty.preset[config.difficulty.level].height *
+              config.difficulty.preset[config.difficulty.level].depth)) *
+          100
       }
     }
   },
-  
+
   // Validate configuration
   validateConfig: (config: GameConfig): string[] => {
     const errors: string[] = []
-    
-    if (config.difficulty.preset[config.difficulty.level].width < 1 || config.difficulty.preset[config.difficulty.level].height < 1 || config.difficulty.preset[config.difficulty.level].depth < 1) {
+
+    if (
+      config.difficulty.preset[config.difficulty.level].width < 1 ||
+      config.difficulty.preset[config.difficulty.level].height < 1 ||
+      config.difficulty.preset[config.difficulty.level].depth < 1
+    ) {
       errors.push('Grid dimensions must be at least 1x1x1')
     }
-    
-    if (config.difficulty.preset[config.difficulty.level].width > 50 || config.difficulty.preset[config.difficulty.level].height > 50 || config.difficulty.preset[config.difficulty.level].depth > 10) {
+
+    if (
+      config.difficulty.preset[config.difficulty.level].width > 50 ||
+      config.difficulty.preset[config.difficulty.level].height > 50 ||
+      config.difficulty.preset[config.difficulty.level].depth > 10
+    ) {
       errors.push('Grid dimensions too large (max 50x50x10)')
     }
-    
+
     const totalCells = GameConfigUtils.getTotalCells(config)
     if (config.mines.count >= totalCells) {
       errors.push('Too many mines for grid size')
     }
-    
+
     if (config.mines.count < 1) {
       errors.push('Must have at least 1 mine')
     }
-    
+
     if (config.spatial.cardSize <= 0) {
       errors.push('Card size must be positive')
     }
-    
+
     if (config.audio.volume < 0 || config.audio.volume > 1) {
       errors.push('Audio volume must be between 0 and 1')
     }
-    
+
     return errors
   },
-  
+
   // Calculate optimal camera position
-  getOptimalCameraPosition: (config: GameConfig): { x: number, y: number, z: number } => {
+  getOptimalCameraPosition: (config: GameConfig): { x: number; y: number; z: number } => {
     const { width, height, depth } = config.difficulty.preset[config.difficulty.level]
     const { cardSize, cardSpacing, cameraDistance, cameraHeight } = config.spatial
-    
+
     const gridWidth = width * (cardSize + cardSpacing) - cardSpacing
     const gridHeight = height * (cardSize + cardSpacing) - cardSpacing
     const gridDepth = depth * (cardSize + cardSpacing) - cardSpacing
-    
+
     // Position camera to see the entire grid
     const maxDimension = Math.max(gridWidth, gridHeight, gridDepth)
     const distance = Math.max(cameraDistance, maxDimension * 1.5)
-    
+
     return {
       x: 0,
       y: cameraHeight,
@@ -256,10 +271,7 @@ export const GameConfigUtils = {
 }
 
 // Utility function to get preset with proper depth based on spatial mode
-export const getPresetForEnvironment = (
-  level: keyof typeof defaultConfig.difficulty.preset,
-  isSpatial: boolean
-) => {
+export const getPresetForEnvironment = (level: keyof typeof defaultConfig.difficulty.preset, isSpatial: boolean) => {
   const basePreset = defaultConfig.difficulty.preset[level]
 
   if (!isSpatial) {

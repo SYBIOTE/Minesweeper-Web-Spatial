@@ -9,7 +9,7 @@ const baseProps = {
   viewBox: '0 0 16 16',
   xmlns: 'http://www.w3.org/2000/svg',
   preserveAspectRatio: 'xMidYMid meet',
-  shapeRendering: 'crispEdges' as const,
+  shapeRendering: 'crispEdges' as const
 }
 
 const renderBadge = (fill: string, light: string, dark: string) => (
@@ -41,5 +41,3 @@ export const ExpertIcon: React.FC<IconProps> = ({ className, style }) => (
     {renderBadge('#ef4444', '#fca5a5', '#991b1b')}
   </svg>
 )
-
-

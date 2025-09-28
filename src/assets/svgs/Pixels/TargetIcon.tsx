@@ -23,5 +23,3 @@ export const TargetIcon: React.FC<TargetIconProps> = ({ className, style }) => (
     <rect x="0" y="7.5" width="16" height="1" fill="#ef4444" />
   </svg>
 )
-
-

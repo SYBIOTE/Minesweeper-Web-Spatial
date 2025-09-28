@@ -27,5 +27,3 @@ export const CellEmptyIcon: React.FC<IconProps> = ({ className, style }) => (
     <rect x="12" y="12" width="1" height="1" fill="#f8fafc" />
   </svg>
 )
-
-

@@ -1,11 +1,12 @@
 import { memo } from 'react'
+
 import type { GameConfig } from '../AppConfig'
 import defaultConfig from '../AppConfig'
 import { BombIcon } from '../assets/svgs/Pixels/BombIcon'
-import { FlagIcon } from '../assets/svgs/Pixels/FlagIcon'
-import { NumberIcon } from '../assets/svgs/Pixels/NumberIcon'
 import { CellEmptyIcon } from '../assets/svgs/Pixels/CellEmptyIcon'
 import { CellRevealedIcon } from '../assets/svgs/Pixels/CellRevealedIcon'
+import { FlagIcon } from '../assets/svgs/Pixels/FlagIcon'
+import { NumberIcon } from '../assets/svgs/Pixels/NumberIcon'
 
 type MinesweeperTile2DProps = {
   size?: number
@@ -18,7 +19,16 @@ type MinesweeperTile2DProps = {
   onContextMenu?: (e: React.MouseEvent) => void
 }
 
-const MinesweeperTile2DComponent = ({ index, variant = 'empty', number, config = defaultConfig, active = true, onClick, onContextMenu, size }: MinesweeperTile2DProps) => {
+const MinesweeperTile2DComponent = ({
+  index,
+  variant = 'empty',
+  number,
+  config = defaultConfig,
+  active = true,
+  onClick,
+  onContextMenu,
+  size
+}: MinesweeperTile2DProps) => {
   const mineColor = config.visual.cardColors.mine
   const numberColors = config.visual.cardColors.number
 
@@ -32,14 +42,10 @@ const MinesweeperTile2DComponent = ({ index, variant = 'empty', number, config =
   const renderContent = () => {
     switch (variant) {
       case 'bomb':
-        return (
-          <BombIcon className="w-full h-full" style={{ filter: `drop-shadow(0 0 8px ${mineColor}44)` }} />
-        )
+        return <BombIcon className="w-full h-full" style={{ filter: `drop-shadow(0 0 8px ${mineColor}44)` }} />
 
       case 'flag':
-        return (
-          <FlagIcon className="w-full h-full" style={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))' }} />
-        )
+        return <FlagIcon className="w-full h-full" style={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))' }} />
 
       case 'number':
         if (typeof number === 'number' && number > 0) {
@@ -73,12 +79,12 @@ const MinesweeperTile2DComponent = ({ index, variant = 'empty', number, config =
   }
 
   return (
-    <div 
+    <div
       onClick={onClick}
       onContextMenu={onContextMenu}
       enable-xr
       data-index={index}
-      className="flex cursor-pointer items-center justify-center overflow-hidden rounded border border-white/20 bg-black/40 shadow-[3px_3px_0_rgba(0,0,0,0.7)]"
+      className="flex cursor-pointer items-center justify-center overflow-hidden rounded border border-white/20 bg-black/40 shadow-[3px_3px_0_rgba(0,0,0,0.7)] opacity-50"
       style={getCardStyle() as React.CSSProperties}
     >
       {renderContent()}

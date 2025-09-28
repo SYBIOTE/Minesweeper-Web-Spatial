@@ -87,12 +87,10 @@ export class MinesweeperGame {
     const minesToPlace = Math.min(mineCount, cells.length - 1) // Ensure at least one non-mine cell
 
     // Reset all mines
-    cells.forEach(cell => cell.isMine = false)
+    cells.forEach((cell) => (cell.isMine = false))
 
     // Place mines randomly, excluding the first click position
-    const availableIndices = cells
-      .map((_, index) => index)
-      .filter(index => index !== excludeIndex)
+    const availableIndices = cells.map((_, index) => index).filter((index) => index !== excludeIndex)
 
     for (let i = 0; i < minesToPlace; i++) {
       const randomIndex = Math.floor(Math.random() * availableIndices.length)
@@ -108,9 +106,9 @@ export class MinesweeperGame {
   private calculateNeighborCounts(): void {
     const { cells, width, height, depth } = this.state
 
-    cells.forEach(cell => {
+    cells.forEach((cell) => {
       let count = 0
-      
+
       // Check all 26 neighbors in 3D space
       for (let dx = -1; dx <= 1; dx++) {
         for (let dy = -1; dy <= 1; dy++) {
@@ -227,7 +225,7 @@ export class MinesweeperGame {
       // If this cell is also empty, add its neighbors to the queue
       if (currentCell.neighborMineCount === 0) {
         const neighbors = this.getNeighbors(currentCell)
-        queue.push(...neighbors.filter(n => !visited.has(n.index) && !n.isRevealed && !n.isFlagged))
+        queue.push(...neighbors.filter((n) => !visited.has(n.index) && !n.isRevealed && !n.isFlagged))
       }
     }
   }
@@ -274,8 +272,8 @@ export class MinesweeperGame {
     }
 
     const neighbors = this.getNeighbors(cell)
-    const flaggedNeighbors = neighbors.filter(n => n.isFlagged).length
-    const unrevealedNeighbors = neighbors.filter(n => !n.isRevealed && !n.isFlagged)
+    const flaggedNeighbors = neighbors.filter((n) => n.isFlagged).length
+    const unrevealedNeighbors = neighbors.filter((n) => !n.isRevealed && !n.isFlagged)
 
     // Only proceed if flagged neighbors match the number
     if (flaggedNeighbors !== cell.neighborMineCount) {
@@ -303,7 +301,7 @@ export class MinesweeperGame {
     const { cells, mineCount } = this.state
     const totalCells = cells.length
     const nonMineCells = totalCells - mineCount
-    
+
     return this.state.revealedCount >= nonMineCells
   }
 
@@ -332,7 +330,7 @@ export class MinesweeperGame {
     const { revealedCount, flagCount, mineCount, startTime, endTime } = this.state
     const totalCells = this.state.cells.length
     const nonMineCells = totalCells - mineCount
-    
+
     return {
       revealedCount,
       flagCount,

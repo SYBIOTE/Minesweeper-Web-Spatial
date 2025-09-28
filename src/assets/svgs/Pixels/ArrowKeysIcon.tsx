@@ -25,5 +25,3 @@ export const ArrowKeysIcon: React.FC<IconProps> = ({ className, style }) => (
     <rect x="4" y="7" width="8" height="2" fill="#22c55e" />
   </svg>
 )
-
-

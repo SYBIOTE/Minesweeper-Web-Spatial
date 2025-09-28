@@ -23,5 +23,3 @@ export const CellRevealedIcon: React.FC<IconProps> = ({ className, style }) => (
     <rect x="2" y="13" width="12" height="1" fill="#0f172a" />
   </svg>
 )
-
-

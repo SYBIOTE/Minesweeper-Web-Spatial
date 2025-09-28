@@ -1,14 +1,11 @@
-
-
 import { defaultConfig, type GameConfig } from './AppConfig'
 import { GameStartScene } from './pages/GameStartScene'
 
 export const App = () => {
-  const isSpatial = navigator.userAgent.includes("WebSpatial") || import.meta.env.XR_ENV === "avp"
+  const isSpatial = navigator.userAgent.includes('WebSpatial') || import.meta.env.XR_ENV === 'avp'
 
   // Game configuration - can be made dynamic later
   const gameConfig = defaultConfig
-
 
   // Scene handlers
   const handleStartGame = (difficulty: keyof GameConfig['difficulty']['preset']) => {
@@ -23,7 +20,7 @@ export const App = () => {
               defaultSize: {
                 width: 1200,
                 height: 800
-              },
+              }
             }
           })
 
@@ -47,16 +44,16 @@ export const App = () => {
     <div
       enable-xr
       className="flex flex-col h-screen w-full overflow-hidden text-white font-inter font-normal leading-relaxed"
-      style={{
-        background: isSpatial ? 'none' : 'radial-gradient(ellipse at 50% -20%,rgba(0, 0, 0, 0.7) 0%, rgba(16,25,30,1) 100%)',
-        '--xr-scene': 'main',
-      } as React.CSSProperties}
+      style={
+        {
+          background: isSpatial
+            ? 'none'
+            : 'radial-gradient(ellipse at 50% -20%,rgba(0, 0, 0, 0.7) 0%, rgba(16,25,30,1) 100%)',
+          '--xr-scene': 'main'
+        } as React.CSSProperties
+      }
     >
-      <GameStartScene
-        config={gameConfig}
-        isSpatial={isSpatial}
-        onStartGame={handleStartGame}
-      />
+      <GameStartScene config={gameConfig} isSpatial={isSpatial} onStartGame={handleStartGame} />
     </div>
   )
 }
