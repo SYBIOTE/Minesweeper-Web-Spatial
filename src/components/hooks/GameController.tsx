@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import type { GameConfig } from '../../AppConfig'
 import { MinesweeperGame, type GameConfig as GameConfigType, type GameState } from '../../game/MinesweeperGame'
-import { useAudio } from './useAudio'
 
 interface GameControllerProps {
   config: GameConfig
@@ -18,9 +17,12 @@ interface GameControllerProps {
       elapsedTime: number
     }
   ) => void
+  // Audio controls passed from parent
+  playSound?: (soundKey: 'reveal' | 'flag' | 'mine' | 'win' | 'lose') => void
+  audioEnabled?: boolean
 }
 
-export const GameController = ({ config, onGameStateChange, onGameEnd }: GameControllerProps) => {
+export const GameController = ({ config, onGameStateChange, onGameEnd, playSound, audioEnabled }: GameControllerProps) => {
   // Convert AppConfig to GameConfig format
   const gameConfig: GameConfigType = useMemo(() => {
     const preset = config.difficulty.preset[config.difficulty.level]
@@ -48,7 +50,6 @@ export const GameController = ({ config, onGameStateChange, onGameEnd }: GameCon
 
   const onGameStateChangeRef = useRef(onGameStateChange)
   onGameStateChangeRef.current = onGameStateChange
-  const { playSound } = useAudio(config)
 
   const onGameEndRef = useRef(onGameEnd)
   onGameEndRef.current = onGameEnd
@@ -79,14 +80,18 @@ export const GameController = ({ config, onGameStateChange, onGameEnd }: GameCon
         const result = game.toggleFlag(index)
         if (result.success) {
           updateGameState()
-          playSound('flag')
+          if (audioEnabled && playSound) {
+            playSound('flag')
+          }
         }
       } else if (isMiddleClick && config.mechanics.chordClick) {
         // Chord click
         const result = game.chordClick(index)
         if (result.success) {
           updateGameState()
-          playSound('reveal')
+          if (audioEnabled && playSound) {
+            playSound('reveal')
+          }
           if (result.gameOver && onGameEndRef.current) {
             onGameEndRef.current(result.won || false, game.getStats())
           }
@@ -96,20 +101,20 @@ export const GameController = ({ config, onGameStateChange, onGameEnd }: GameCon
         const result = game.revealCell(index)
         if (result.success) {
           const cell = game.getCell(index)
-          if (cell?.isMine) {
-            playSound('mine') // 🔊 Mine explosion sound
-          } else {
-            playSound('reveal') // 🔊 Cell reveal sound
+          if (audioEnabled && playSound) {
+            playSound(cell?.isMine ? 'mine' : 'reveal') // 🔊 Mine explosion sound
           }
-            updateGameState()
+          updateGameState()
           if (result.gameOver && onGameEndRef.current) {
-            playSound(result.won ? 'win' : 'lose') // 🔊 End game sounds
+            if (audioEnabled && playSound) {
+              playSound(result.won ? 'win' : 'lose') // 🔊 End game sounds
+            }
             onGameEndRef.current(result.won || false, game.getStats())
           }
         }
       }
     },
-    [game, flagMode, config.mechanics.chordClick, updateGameState]
+    [game, flagMode, config.mechanics.chordClick, updateGameState, audioEnabled, playSound]
   )
 
   // Handle cell right click

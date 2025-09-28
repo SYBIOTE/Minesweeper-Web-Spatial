@@ -109,6 +109,8 @@ export const MinefieldPage: React.FC = () => {
   const gameControls = GameController({
     config: gameConfig,
     onGameStateChange: () => {}, // We don't need to track game state changes in this component
+    playSound: playSound,
+    audioEnabled: audioEnabled,
     onGameEnd: (won, stats) => {
       setGameStats(stats)
       setIsWin(won)
@@ -244,13 +246,16 @@ export const MinefieldPage: React.FC = () => {
 
         <div className="flex items-center space-x-3 text-xs">
           <button
-              onClick={() => setAudioEnabled(!audioEnabled)}
-              className={`px-1 py-1 border-2 border-white shadow-[2px_2px_0_rgba(0,0,0,0.6)] flex items-center gap-1`}
+              onClick={() => {
+                setAudioEnabled(!audioEnabled)
+              }}
+              className={`px-1 py-1 border-2 border-white shadow-[2px_2px_0_rgba(0,0,0,0.6)] flex items-center gap-1 hover:bg-gray-800 transition-colors`}
               style={
                 {
                   '--xr-background-material': 'thin',
                   '--xr-back': 5,
-                  enableXr: true
+                  enableXr: true,
+                  backgroundColor: audioEnabled ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)'
                 } as React.CSSProperties
               }
             >

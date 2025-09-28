@@ -82,9 +82,6 @@ const Volume3DComponent = ({ config, gameControls }: Volume3DProps) => {
   // For 2D units, we don't need to limit active instances since they're lightweight
   // All cards are active by default (no performance concerns with CSS/SVG)
 
-  Object.entries(layerData).map(([layerZ, positions]) => {
-    console.log(`Layer Z: ${layerZ}, Cards: ${positions.length}`)
-  })
   // Grid styling is now handled per layer for WebSpatial depth
 
   return (

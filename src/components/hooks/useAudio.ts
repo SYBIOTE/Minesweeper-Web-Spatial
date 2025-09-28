@@ -24,7 +24,7 @@ export const useAudio = (config: GameConfig) => {
     return () => {
       audioServiceRef.current = undefined
     }
-  }, [config.audio, audioEnabled])
+  }, [config.audio.sounds, config.audio.volume, audioEnabled])
 
   // Listen for storage changes from other windows
   useEffect(() => {
