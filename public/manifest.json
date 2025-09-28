@@ -24,25 +24,25 @@
   "scope": "/",
   "icons": [
     {
-      "src": "/icons/icon_192.png",
+      "src": "/icons/icon192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon_512.png",
+      "src": "/icons/icon512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon_1024.png",
+      "src": "/icons/icon1024.png",
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon_1024_maskable.png",
+      "src": "/icons/icon1024maskable.png",
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "maskable"
