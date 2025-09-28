@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 
 import { defaultConfig, getConfigForEnvironment, type GameConfig } from '../AppConfig'
-import { BombIcon } from '../assets/svgs/Pixels/BombIcon'
-import { FlagIcon as PixelFlagIcon } from '../assets/svgs/Pixels/FlagIcon'
-import { NumberIcon } from '../assets/svgs/Pixels/NumberIcon'
+import { BombIcon } from '../assets/svgs/pixels/minefield/BombIcon'
+import { FlagIcon as PixelFlagIcon } from '../assets/svgs/pixels/minefield/FlagIcon'
+import { NumberIcon } from '../assets/svgs/pixels/minefield/NumberIcon'
 import { PixelBackground } from '../components/common/PixelBackground'
 import { GameController } from '../components/GameController'
 import { Volume3D } from '../components/Volume3D'

@@ -2,11 +2,11 @@ import { memo } from 'react'
 
 import type { GameConfig } from '../AppConfig'
 import defaultConfig from '../AppConfig'
-import { BombIcon } from '../assets/svgs/Pixels/BombIcon'
-import { CellEmptyIcon } from '../assets/svgs/Pixels/CellEmptyIcon'
-import { CellRevealedIcon } from '../assets/svgs/Pixels/CellRevealedIcon'
-import { FlagIcon } from '../assets/svgs/Pixels/FlagIcon'
-import { NumberIcon } from '../assets/svgs/Pixels/NumberIcon'
+import { BombIcon } from '../assets/svgs/pixels/minefield/BombIcon'
+import { CellEmptyIcon } from '../assets/svgs/pixels/minefield/CellEmptyIcon'
+import { CellRevealedIcon } from '../assets/svgs/pixels/minefield/CellRevealedIcon'
+import { FlagIcon } from '../assets/svgs/pixels/minefield/FlagIcon'
+import { NumberIcon } from '../assets/svgs/pixels/minefield/NumberIcon'
 
 type MinesweeperTile2DProps = {
   size?: number
