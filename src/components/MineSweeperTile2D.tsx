@@ -35,7 +35,32 @@ const MinesweeperTile2DComponent = ({
   const numberColors = config.visual.cardColors.number
 
   // Position-based logic removed - now handled by CSS Grid in parent component
-
+  const getBaseClasses = () => {
+    return [
+      'flex',
+      'cursor-pointer', 
+      'items-center',
+      'justify-center',
+      'overflow-hidden',
+      'rounded',
+      'border',
+      'border-white/20',
+      'bg-black/40',
+      'shadow-[3px_3px_0_rgba(0,0,0,0.7)]'
+    ].join(' ')
+  }
+  
+  const getInteractiveClasses = () => {
+    return [
+      'transition-all',
+      'duration-200',
+      'hover:opacity-100',
+      'hover:border-cyan-400/60',
+      'hover:shadow-[0_0_20px_rgba(34,211,238,0.4),3px_3px_0_rgba(0,0,0,0.7)]',
+      'hover:scale-105'
+    ].join(' ')
+  }
+  
   const getCardStyle = () => ({
     width: `${size}px`,
     height: `${size}px`
@@ -52,6 +77,15 @@ const MinesweeperTile2DComponent = ({
     
     return 'opacity-80'
   }
+
+  const getPointerEvents = () => {
+    // If it's an empty revealed cell in spatial mode, make it uninteractable
+    if (isSpatial && variant === 'revealed' && (!number || number === 0)) {
+      return 'pointer-events-none'
+    }
+    return 'pointer-events-auto'
+  }
+  
 
   const renderContent = () => {
     switch (variant) {
@@ -98,7 +132,7 @@ const MinesweeperTile2DComponent = ({
       onContextMenu={onContextMenu}
       enable-xr
       data-index={index}
-      className={`flex cursor-pointer items-center justify-center overflow-hidden rounded border border-white/20 bg-black/40 shadow-[3px_3px_0_rgba(0,0,0,0.7)] ${getOpacity()} transition-all duration-200 hover:opacity-100 hover:border-cyan-400/60 hover:shadow-[0_0_20px_rgba(34,211,238,0.4),3px_3px_0_rgba(0,0,0,0.7)] hover:scale-105`}
+      className={`${getBaseClasses()} ${getOpacity()} ${getPointerEvents()} ${getInteractiveClasses()}`}
       style={getCardStyle() as React.CSSProperties}
     >
       {renderContent()}
