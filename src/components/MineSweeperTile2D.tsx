@@ -84,7 +84,7 @@ const MinesweeperTile2DComponent = ({
       onContextMenu={onContextMenu}
       enable-xr
       data-index={index}
-      className="flex cursor-pointer items-center justify-center overflow-hidden rounded border border-white/20 bg-black/40 shadow-[3px_3px_0_rgba(0,0,0,0.7)] opacity-50"
+      className="flex cursor-pointer items-center justify-center overflow-hidden rounded border border-white/20 bg-black/40 shadow-[3px_3px_0_rgba(0,0,0,0.7)] opacity-80"
       style={getCardStyle() as React.CSSProperties}
     >
       {renderContent()}
