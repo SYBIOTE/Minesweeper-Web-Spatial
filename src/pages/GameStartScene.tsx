@@ -14,7 +14,7 @@ import { ToggleIcon } from '../assets/svgs/pixels/start/ToggleIcon'
 import { SpatialIcon } from '../assets/svgs/pixels/start/SpatialIcon'
 import { BrowserIcon } from '../assets/svgs/pixels/start/BrowserIcon'
 import { GamepadIcon } from '../assets/svgs/pixels/start/GamepadIcon'
-import { PixelBackground } from '../components/common/PixelBackground'
+import { PixelBackground } from '../components/PixelBackground'
 
 interface GameStartSceneProps {
   config: GameConfig

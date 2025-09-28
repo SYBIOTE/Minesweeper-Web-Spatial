@@ -1,78 +1,51 @@
 {
   "name": "3D Spatial Minesweeper",
   "short_name": "Minesweeper3D",
-  "description": "A volumetric 3D minesweeper game designed for spatial computing platforms",
+  "description": "A 3D minesweeper game designed for spatial computing platforms",
   "version": "1.0.0",
-  "manifest_version": 3,
   "start_url": "/",
   "xr_main_scene": {
     "default_size": {
-      "width": 820,
-      "height": 1280
-    }
+      "width": 1000,
+      "height": 1800
+    },
+    "resizability": {
+      "minWidth": 1000,
+      "minHeight": 1600,
+      "maxWidth": 1300,
+      "maxHeight": 2000
+     }
   },
   "display": "standalone",
   "orientation": "any",
-  "theme_color": "#2bd4cf",
   "background_color": "transparent",
   "categories": ["games", "entertainment", "spatial"],
   "lang": "en",
   "scope": "/",
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "/icons/icon_192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/icons/icon_512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "webspatial": {
-    "platform": "visionos",
-    "spatial_capabilities": [
-      "3d_rendering",
-      "spatial_interaction",
-      "hand_tracking",
-      "eye_tracking"
-    ],
-    "supported_orientations": ["landscape", "portrait"],
-    "spatial_ui": {
-      "background_material": "transparent",
-      "elevation_support": true,
-      "depth_layers": 3,
-      "interaction_modes": ["touch", "gesture", "gaze"]
+      "purpose": "any"
     },
-    "performance": {
-      "max_3d_objects": 1000,
-      "preferred_renderer": "webgpu",
-      "fallback_renderer": "webgl"
+    {
+      "src": "/icons/icon_1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
     },
-    "accessibility": {
-      "voice_control": true,
-      "screen_reader": true,
-      "high_contrast": true,
-      "motion_reduction": true
+    {
+      "src": "/icons/icon_1024_maskable.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "maskable"
     }
-  },
-  "features": [
-    "3d_graphics",
-    "spatial_audio",
-    "haptic_feedback",
-    "multi_user",
-    "offline_capable"
-  ],
-  "permissions": [
-    "spatial_tracking",
-    "hand_tracking",
-    "eye_tracking",
-    "microphone",
-    "camera"
-  ],
-  "related_applications": [],
-  "prefer_related_applications": false
+  ]
 }
