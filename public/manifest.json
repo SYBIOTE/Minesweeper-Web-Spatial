@@ -1,6 +1,6 @@
 {
-  "name": "3D Spatial Minesweeper",
-  "short_name": "Minesweeper3D",
+  "name": "Spatial Minesweeper",
+  "short_name": "Spatial Minesweeper",
   "description": "A 3D minesweeper game designed for spatial computing platforms",
   "version": "1.0.0",
   "start_url": "/",
