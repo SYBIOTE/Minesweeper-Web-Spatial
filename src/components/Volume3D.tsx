@@ -95,13 +95,16 @@ const Volume3DComponent = ({ config, isSpatial = false, gameControls }: Volume3D
           <div
             enable-xr
             key={layerZ}
-            className="absolute inset-0 grid items-center justify-center"
+            className="absolute grid items-center justify-center"
             style={
               {
                 '--xr-back': actualZPosition, // Use actual Z position converted to WebSpatial units
                 gridTemplateColumns: `repeat(${gridWidth}, ${cardSize + cardSpacing}px)`,
                 gridTemplateRows: `repeat(${gridHeight}, ${cardSize + cardSpacing}px)`,
-                gap: `${cardSpacing}px`
+                gap: `${cardSpacing}px`,
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)'
               } as React.CSSProperties
             }
           >

@@ -336,7 +336,7 @@ export const MinefieldPage: React.FC = () => {
 
       {/* 3D Minefield */}
       <div
-        className="relative h-full w-full"
+        className="relative h-full w-full flex items-center justify-center"
         style={
           {
             '--xr-scene': 'minefield',
