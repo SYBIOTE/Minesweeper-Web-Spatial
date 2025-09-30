@@ -25,7 +25,7 @@ const GameEndCelebration: React.FC<{ isSpatial: boolean; isWin: boolean; countdo
       style={
         {
           '--xr-elevation': '10',
-          '--xr-back': 400,
+          '--xr-back': 900,
           enableXr: true,
           background: isWin
             ? 'linear-gradient(135deg, rgba(34,197,94,0.85), rgba(13,148,136,0.85))'
