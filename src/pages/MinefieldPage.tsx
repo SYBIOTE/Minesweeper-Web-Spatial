@@ -14,10 +14,10 @@ import { RevealIcon } from '../assets/svgs/pixels/minefield/RevealIcon'
 import { ExitIcon } from '../assets/svgs/pixels/minefield/ExitIcon'
 import { ResetIcon } from '../assets/svgs/pixels/minefield/ResetIcon'
 
-const GameEndCelebration: React.FC<{ isSpatial: boolean; isWin: boolean; countdown: number }> = ({
-  isSpatial,
+const GameEndCelebration: React.FC<{ height: number; isWin: boolean; countdown: number }> = ({
   isWin,
-  countdown
+  countdown,
+  height,
 }) => {
   return (
     <div
@@ -25,7 +25,7 @@ const GameEndCelebration: React.FC<{ isSpatial: boolean; isWin: boolean; countdo
       style={
         {
           '--xr-elevation': '10',
-          '--xr-back': 900,
+          '--xr-back': height,
           enableXr: true,
           background: isWin
             ? 'linear-gradient(135deg, rgba(34,197,94,0.85), rgba(13,148,136,0.85))'
@@ -332,7 +332,7 @@ export const MinefieldPage: React.FC = () => {
 
       {/* Game End Celebration */}
       {showCelebration && gameControls.isGameOver && (
-        <GameEndCelebration isSpatial={isSpatial} isWin={isWin} countdown={countdown} />
+        <GameEndCelebration height ={ (gameConfig.spatial.cardSize + gameConfig.spatial.cardSpacing) * gameConfig.difficulty.preset[gameConfig.difficulty.level].depth * 100} isWin={isWin} countdown={countdown} />
       )}
 
       {/* 3D Minefield */}
