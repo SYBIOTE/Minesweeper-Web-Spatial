@@ -318,7 +318,7 @@ export const MinefieldPage: React.FC = () => {
           }`}
           style={
             {
-              '--xr-background-material': isSpatial ? 'thin' : 'none',
+              '--xr-background-material': 'transparent',
               '--xr-back': 10,
               '--xr-elevation': '0.05',
               enableXr: true,
