@@ -24,12 +24,13 @@ const GameEndCelebration: React.FC<{ isSpatial: boolean; isWin: boolean; countdo
       className="absolute inset-0 flex items-center justify-center"
       style={
         {
-          '--xr-elevation': isSpatial ? '0.9' : '10',
+          '--xr-elevation': '10',
+          '--xr-back': 400,
           enableXr: true,
           background: isWin
             ? 'linear-gradient(135deg, rgba(34,197,94,0.85), rgba(13,148,136,0.85))'
             : 'linear-gradient(135deg, rgba(239,68,68,0.85), rgba(55,65,81,0.85))',
-          zIndex: isSpatial ? undefined : 9999,
+          zIndex: 9999,
           imageRendering: 'pixelated'
         } as React.CSSProperties
       }
