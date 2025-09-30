@@ -14,10 +14,11 @@ import { RevealIcon } from '../assets/svgs/pixels/minefield/RevealIcon'
 import { ExitIcon } from '../assets/svgs/pixels/minefield/ExitIcon'
 import { ResetIcon } from '../assets/svgs/pixels/minefield/ResetIcon'
 
-const GameEndCelebration: React.FC<{ height: number; isWin: boolean; countdown: number }> = ({
+const GameEndCelebration: React.FC<{ height: number; isWin: boolean; countdown: number; isSpatial: boolean }> = ({
   isWin,
   countdown,
   height,
+  isSpatial,
 }) => {
   return (
     <div
@@ -27,9 +28,9 @@ const GameEndCelebration: React.FC<{ height: number; isWin: boolean; countdown: 
           '--xr-elevation': '10',
           '--xr-back': height,
           enableXr: true,
-          background: isWin
+          background: !isSpatial && (isWin
             ? 'linear-gradient(135deg, rgba(34,197,94,0.85), rgba(13,148,136,0.85))'
-            : 'linear-gradient(135deg, rgba(239,68,68,0.85), rgba(55,65,81,0.85))',
+            : 'linear-gradient(135deg, rgba(239,68,68,0.85), rgba(55,65,81,0.85))'),
           zIndex: 9999,
           imageRendering: 'pixelated'
         } as React.CSSProperties
@@ -318,7 +319,7 @@ export const MinefieldPage: React.FC = () => {
           }`}
           style={
             {
-              '--xr-background-material': 'transparent',
+              '--xr-background-material': 'thin',
               '--xr-back': 10,
               '--xr-elevation': '0.05',
               enableXr: true,
@@ -332,7 +333,7 @@ export const MinefieldPage: React.FC = () => {
 
       {/* Game End Celebration */}
       {showCelebration && gameControls.isGameOver && (
-        <GameEndCelebration height ={ (gameConfig.spatial.cardSize + gameConfig.spatial.cardSpacing) * gameConfig.difficulty.preset[gameConfig.difficulty.level].depth * 100} isWin={isWin} countdown={countdown} />
+        <GameEndCelebration height ={ (gameConfig.spatial.cardSize + gameConfig.spatial.cardSpacing) * gameConfig.difficulty.preset[gameConfig.difficulty.level].depth * 100} isWin={isWin} countdown={countdown} isSpatial={isSpatial}   />
       )}
 
       {/* 3D Minefield */}
