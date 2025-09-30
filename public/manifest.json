@@ -6,14 +6,14 @@
   "start_url": "/",
   "xr_main_scene": {
     "default_size": {
-      "width": 1000,
+      "width": 1200,
       "height": 1800
     },
     "resizability": {
-      "minWidth": 1000,
-      "minHeight": 1600,
-      "maxWidth": 1300,
-      "maxHeight": 2000
+      "minWidth": 1200,
+      "minHeight": 1800,
+      "maxWidth": 1400,
+      "maxHeight": 2100
      }
   },
   "display": "standalone",

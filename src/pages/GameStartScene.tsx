@@ -30,7 +30,7 @@ export const GameStartScene: React.FC<GameStartSceneProps> = ({ config, isSpatia
   // 2D/3D toggle state - default to 2D for normal browsers, 3D for spatial
   const [is3DMode, setIs3DMode] = useState(isSpatial)
   // Add after other state declarations
-const { audioEnabled, setEnabled: setAudioEnabled , playSound } = useAudio(config)
+  const { audioEnabled, setEnabled: setAudioEnabled , playSound } = useAudio(config)
   const currentPreset = getPresetForEnvironment(selectedDifficulty, is3DMode)
   const currentConfig = getConfigForEnvironment(selectedDifficulty, is3DMode)
 
