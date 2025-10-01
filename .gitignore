@@ -25,3 +25,6 @@ dist-ssr
 
 package-lock.json
 .env.local
+build/DistributionSummary.plist
+build/ExportOptions.plist
+build/Spatial Minesweeper.ipa
