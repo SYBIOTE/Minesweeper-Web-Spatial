@@ -11,7 +11,11 @@ export default defineConfig({
     react({
       jsxImportSource: '@webspatial/react-sdk'
     }),
-    webspatial(),
+    webspatial( 
+      {       
+        outputDir: ""
+      }
+    ),
     createHtmlPlugin({
       inject: {
         data: {
