@@ -153,11 +153,11 @@ export const defaultConfig: GameConfig = {
     enabled: true,
     volume: 0.7,
     sounds: {
-      reveal: '/src/assets/audio/plop.mp3',        // Cell reveal sound
-      flag: '/src/assets/audio/select.mp3',       // Flag placement sound  
-      mine: '/src/assets/audio/mineExplosion.mp3', // Mine explosion
-      win: '/src/assets/audio/win.mp3',           // Victory sound
-      lose: '/src/assets/audio/lose.mp3'          // Game over sound
+      reveal: './assets/audio/plop.mp3',        // Cell reveal sound
+      flag: './assets/audio/select.mp3',       // Flag placement sound  
+      mine: './assets/audio/mineExplosion.mp3', // Mine explosion
+      win: './assets/audio/win.mp3',           // Victory sound
+      lose: './assets/audio/lose.mp3'          // Game over sound
     }
   },
   

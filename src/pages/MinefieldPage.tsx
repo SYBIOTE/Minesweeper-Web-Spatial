@@ -6,13 +6,14 @@ import { FlagIcon as PixelFlagIcon } from '../assets/svgs/pixels/minefield/FlagI
 import { NumberIcon } from '../assets/svgs/pixels/minefield/NumberIcon'
 import { PixelBackground } from '../components/PixelBackground'
 import { GameController } from '../components/hooks/GameController'
-import { Volume3D } from '../components/Volume3D'
+import { Grid3D } from '../components/Grid3D'
 import { useAudio } from '../components/hooks/useAudio'
 import { SoundIcon } from '../assets/svgs/pixels/start/SoundIcon'
 import { FlagModeIcon } from '../assets/svgs/pixels/minefield/FlagModeIcon'
 import { RevealIcon } from '../assets/svgs/pixels/minefield/RevealIcon'
 import { ExitIcon } from '../assets/svgs/pixels/minefield/ExitIcon'
 import { ResetIcon } from '../assets/svgs/pixels/minefield/ResetIcon'
+import { MinesweeperGrid3D } from '../components/MinesweeperGrid3D'
 
 const GameEndCelebration: React.FC<{ height: number; isWin: boolean; countdown: number; isSpatial: boolean }> = ({
   isWin,
@@ -348,7 +349,7 @@ export const MinefieldPage: React.FC = () => {
           } as React.CSSProperties
         }
       >
-        <Volume3D config={gameConfig} isSpatial={isSpatial} gameControls={gameControls} />
+        <MinesweeperGrid3D config={gameConfig} isSpatial={isSpatial} gameControls={gameControls} />
       </div>
     </div>
   )
