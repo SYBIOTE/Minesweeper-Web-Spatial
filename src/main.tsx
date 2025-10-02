@@ -8,7 +8,7 @@ import { MinefieldPage } from './pages/MinefieldPage'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <BrowserRouter basename={__XR_ENV_BASE__}>
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/minefield" element={<MinefieldPage />} />
