@@ -26,7 +26,7 @@ export const App = () => {
             )
 
           // Open the minefield scene in a new window with difficulty and mode parameters
-          window.open(`${import.meta.env.BASE_URL}minefield?difficulty=${difficulty}&mode=${is3DMode ? '3d' : '2d'}`, 'minefieldScene')
+          window.open(`${import.meta.env.BASE_URL}/minefield?difficulty=${difficulty}&mode=${is3DMode ? '3d' : '2d'}`, 'minefieldScene')
         
       } catch (error) {
         console.warn('WebSpatial SDK not available, opening in same window:', error)
