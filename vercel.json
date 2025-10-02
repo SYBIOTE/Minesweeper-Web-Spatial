@@ -13,6 +13,18 @@
       "destination": "/manifest.json"
     },
     {
+      "source": "/webspatial/avp/minefield",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/webspatial/avp/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/webspatial/avp",
+      "destination": "/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
