@@ -6,20 +6,12 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 
 // https://vite.dev/config/
 export default defineConfig({
-  build: {
-    outDir: 'dist',
-  },
   plugins: [
-    
     basicSsl(),
     react({
       jsxImportSource: '@webspatial/react-sdk'
     }),
-    webspatial(
-      {
-        outputDir: "",
-      }
-    ),
+    webspatial(),
     createHtmlPlugin({
       inject: {
         data: {
@@ -27,9 +19,5 @@ export default defineConfig({
         }
       }
     })
-  ],
-  base: 
-    process.env.XR_ENV !== 'avp'
-      ? '/minesweeper/'
-     : '/webspatialminesweeper/'
+  ]
 })
