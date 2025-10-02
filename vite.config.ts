@@ -28,10 +28,8 @@ export default defineConfig({
       }
     })
   ],
-  base: process.env.NODE_ENV === 'production'
-  && (
+  base: 
     process.env.XR_ENV !== 'avp'
       ? '/minesweeper/'
      : '/webspatialminesweeper/'
-  ) || ''
 })

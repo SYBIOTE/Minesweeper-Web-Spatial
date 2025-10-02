@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { defaultConfig, type GameConfig } from './AppConfig'
 import { GameStartScene } from './pages/GameStartScene'
-
+import { initScene } from '@webspatial/react-sdk'
 export const App = () => {
   const isSpatial = navigator.userAgent.includes('WebSpatial') || import.meta.env.XR_ENV === 'avp'
 
@@ -13,20 +14,20 @@ export const App = () => {
     if (typeof window !== 'undefined') {
       try {
         // Import initScene dynamically to avoid SSR issues
-        import('@webspatial/react-sdk').then(({ initScene }) => {
-          initScene('minefieldScene', (prevConfig) => {
+        initScene('minefieldScene', (prevConfig: any) => {
             return {
-              ...prevConfig,
+              ...prevConfig,  
               defaultSize: {
                 width: 1200,
                 height: 800
               }
             }
-          })
+          }
+            )
 
           // Open the minefield scene in a new window with difficulty and mode parameters
-          window.open(`/minefield?difficulty=${difficulty}&mode=${is3DMode ? '3d' : '2d'}`, 'minefieldScene')
-        })
+          window.open(`${import.meta.env.BASE_URL}minefield?difficulty=${difficulty}&mode=${is3DMode ? '3d' : '2d'}`, 'minefieldScene')
+        
       } catch (error) {
         console.warn('WebSpatial SDK not available, opening in same window:', error)
         // Fallback for non-spatial environments
