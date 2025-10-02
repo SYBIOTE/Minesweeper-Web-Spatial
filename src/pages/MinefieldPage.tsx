@@ -6,7 +6,6 @@ import { FlagIcon as PixelFlagIcon } from '../assets/svgs/pixels/minefield/FlagI
 import { NumberIcon } from '../assets/svgs/pixels/minefield/NumberIcon'
 import { PixelBackground } from '../components/PixelBackground'
 import { GameController } from '../components/hooks/GameController'
-import { Grid3D } from '../components/Grid3D'
 import { useAudio } from '../components/hooks/useAudio'
 import { SoundIcon } from '../assets/svgs/pixels/start/SoundIcon'
 import { FlagModeIcon } from '../assets/svgs/pixels/minefield/FlagModeIcon'
